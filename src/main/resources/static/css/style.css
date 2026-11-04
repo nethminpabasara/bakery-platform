@@ -7,6 +7,7 @@
   --border: #D9D2C7;
   --nav: #2A1608;
   --error: #A33A2A;
+  --success: #4F6B3A;
   --serif: "Playfair Display", Georgia, serif;
   --sans: "Inter", system-ui, sans-serif;
 }
@@ -119,3 +120,133 @@ a { color: inherit; }
   .cart-row .remove { grid-column: 2; grid-row: 3; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* =====================================================================
+   Navigation links (all pages)
+   ===================================================================== */
+.nav .wrap { flex-wrap: wrap; gap: 0.5rem 2rem; }
+.nav-links { display: flex; gap: 1.75rem; flex-wrap: wrap; }
+.nav-link[aria-current="page"] { color: #fff; }
+
+/* =====================================================================
+   Checkout (index.html)
+   ===================================================================== */
+.checkout { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 0.25rem; }
+.field-label { font-size: 0.85rem; color: var(--accent); }
+.checkout .search { margin-top: 0; margin-bottom: 1.25rem; }
+.btn-primary { height: 2.75rem; border-color: var(--fg); font-weight: 500; width: 100%; }
+.btn-primary:hover:not([disabled]) { background: var(--fg); color: var(--bg); }
+
+/* =====================================================================
+   Order pages (orders.html and admin-orders.html)
+   ===================================================================== */
+.intro.compact { padding: 3rem 0 2rem; }
+.intro.compact h1 { font-size: clamp(2.2rem, 4vw, 3.2rem); max-width: none; }
+.muted { font-size: 0.8rem; color: var(--accent); }
+.link { background: none; border: 0; padding: 0; font: 300 0.8rem var(--sans); color: var(--accent); text-decoration: underline; cursor: pointer; }
+.link:hover { color: var(--fg); }
+
+.confirm { margin-top: 2.5rem; padding: 1.5rem 1.75rem; border: 1px solid var(--success); border-left-width: 4px; }
+.confirm h2 { font-size: 1.8rem; color: var(--success); }
+.confirm p { margin-top: 0.25rem; }
+
+/* Status pill: flat, square, one colour per status */
+.pill { display: inline-block; padding: 0.1rem 0.7rem; border: 1px solid currentColor; font-size: 0.75rem; letter-spacing: 0.05em; white-space: nowrap; }
+.pill-pending   { color: var(--accent); }
+.pill-preparing { color: var(--fg); }
+.pill-ready     { color: #7A5A12; }
+.pill-delivered { color: var(--success); }
+
+/* My orders: one block per order */
+.order-list { padding-bottom: 6rem; max-width: 52rem; }
+.order { border-top: 2px solid var(--fg); padding: 1.5rem 0 1.75rem; }
+.order + .order { margin-top: 1rem; }
+.order-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.order-head h3 { font-size: 1.6rem; }
+
+.steps { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; margin: 1.25rem 0; }
+.steps li { font-size: 0.75rem; color: var(--accent); padding-top: 0.5rem; border-top: 3px solid var(--border); }
+.steps li.done { border-top-color: var(--fg); color: var(--fg); }
+.steps li.current { font-weight: 500; }
+
+.items { font-weight: 400; }
+.note { font-size: 0.9rem; color: var(--accent); margin-top: 0.4rem; }
+.note-edit { display: flex; gap: 0.6rem; align-items: center; margin-top: 0.6rem; flex-wrap: wrap; }
+.note-edit input { flex: 1; min-width: 12rem; height: 2.25rem; border: 1px solid var(--border); background: transparent; padding: 0 0.7rem; font: 300 0.9rem var(--sans); color: var(--fg); }
+.note-edit input:focus { outline: none; border-color: var(--fg); }
+.order-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 1.25rem; }
+.order-foot .total { font-size: 1.7rem; }
+
+/* Admin table */
+.toolbar { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1.25rem; }
+.select { height: 2.25rem; padding: 0 0.7rem; border: 1px solid var(--border); background: transparent; font: 300 0.9rem var(--sans); color: var(--fg); }
+.table-wrap { overflow-x: auto; padding-bottom: 6rem; }
+.orders-table { width: 100%; border-collapse: collapse; min-width: 52rem; }
+.orders-table th { text-align: left; font-weight: 500; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); padding: 0.7rem 0.75rem 0.7rem 0; border-bottom: 1px solid var(--fg); }
+.orders-table td { padding: 1rem 0.75rem 1rem 0; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 0.9rem; }
+.orders-table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.orders-table .action-box { display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+.orders-table td.empty { text-align: center; }
+
+@media (max-width: 40rem) {
+  .nav .wrap { justify-content: center; }
+  .nav-links { gap: 1.1rem; justify-content: center; }
+  .brand { font-size: 1.15rem; }
+  .intro.compact { padding: 2rem 0 1.5rem; }
+  .steps li { font-size: 0.68rem; }
+  .order-head h3 { font-size: 1.35rem; }
+}
+
+/* =====================================================================
+   Payment pages (payment.html, payments.html, admin-payments.html)
+   ===================================================================== */
+[hidden] { display: none !important; }
+
+.pill-paid     { color: var(--success); }
+.pill-refunded { color: var(--error); }
+
+.layout.pay-layout { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+.pay-heading { font-size: 1.8rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--fg); margin-bottom: 0.25rem; }
+.pay-box { border-top: 2px solid var(--fg); padding-top: 1.75rem; position: sticky; top: 5.5rem; }
+.pay-box .pay-heading { border-bottom: 0; padding-bottom: 0; margin-bottom: 0.5rem; }
+
+/* Radio choices for orders and payment methods: a flat row with a square outline */
+.choices { display: flex; flex-direction: column; }
+.choice { display: flex; gap: 0.9rem; align-items: flex-start; padding: 1.1rem 0.9rem; border-bottom: 1px solid var(--border); cursor: pointer; }
+.choice:hover { background: var(--muted); }
+.choice:has(input:checked) { background: var(--muted); box-shadow: inset 3px 0 0 var(--fg); }
+.choice input { margin-top: 0.4rem; accent-color: var(--fg); }
+.choice input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.choice-body { display: flex; flex-direction: column; gap: 0.1rem; flex: 1; }
+.choice-title { font-weight: 400; }
+.choice-body .price { font-size: 0.95rem; }
+
+.card-fields { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
+.card-fields .search { margin-top: 0; margin-bottom: 1rem; }
+
+/* Amount / fee / total */
+.sum { margin: 1.75rem 0 0.4rem; }
+.sum > div { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+.sum dt { color: var(--accent); }
+.sum .sum-total { border-bottom: 0; padding-top: 0.9rem; }
+.sum .sum-total dd { font-family: var(--serif); font-style: italic; font-size: 1.9rem; line-height: 1.2; }
+.pay-box .muted { margin-bottom: 1.25rem; }
+.pay-box .card-fields .muted { margin-bottom: 0; }
+
+/* Payment history: details list and footer buttons */
+.facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 0.9rem 1.5rem; margin-top: 1rem; padding: 1rem 0 0; border-top: 1px solid var(--border); }
+.facts dt { font-size: 0.8rem; color: var(--accent); }
+.facts dd { font-weight: 400; font-variant-numeric: tabular-nums; }
+.foot-actions { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.foot-actions .btn { text-decoration: none; }
+.order-foot a.btn { text-decoration: none; }
+
+/* Admin payments */
+.select.narrow { width: 7rem; }
+.toolbar { flex-wrap: wrap; }
+.payments-table { min-width: 64rem; }
+
+@media (max-width: 60rem) {
+  .layout.pay-layout { grid-template-columns: 1fr; }
+  .pay-box { position: static; }
+}

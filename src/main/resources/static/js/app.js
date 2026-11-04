@@ -1,11 +1,11 @@
 // =====================================================================
-// app.js - Menu and Cart page
+// app.js - Menu and Cart page (index.html)
 // The cart talks to the Spring Boot API (/api/cart).
 // If the backend is not running, the page switches to demo data.
+// Shared helpers (money, toast, request...) are in common.js
 // =====================================================================
 
 const API_URL = "/api/cart";
-const USER_ID = 1;      // Only one customer for now (login comes from Member 2)
 const MAX_QTY = 50;     // Same rule as the backend
 
 // ---------------------------------------------------------------------
@@ -65,31 +65,8 @@ const demoApi = {
 };
 
 // ---------------------------------------------------------------------
-// 3. Real API calls (Spring Boot)
+// 3. Real cart API calls (Spring Boot)
 // ---------------------------------------------------------------------
-async function request(method, url, body) {
-  const options = { method: method, headers: {} };
-  if (body) {
-    options.headers["Content-Type"] = "application/json";
-    options.body = JSON.stringify(body);
-  }
-  const res = await fetch(url, options);
-  if (!res.ok) throw new Error(await readError(res));
-  if (res.status === 204) return null;      // delete returns no body
-  return res.json();
-}
-
-// The backend sends errors as JSON, e.g. {"error": "..."} or {"quantity": "..."}
-async function readError(res) {
-  if (res.status >= 500) return "Server error. Check the Spring Boot console.";
-  try {
-    const data = await res.json();
-    return Object.values(data).join(", ");
-  } catch (e) {
-    return "Something went wrong (" + res.status + ").";
-  }
-}
-
 const liveApi = {
   getCart(search) {
     const q = search ? "?search=" + encodeURIComponent(search) : "";
@@ -104,33 +81,10 @@ const liveApi = {
 let api = liveApi;                 // switches to demoApi if the backend is down
 let cart = { items: [], total: 0 };
 let searchText = "";
+let cartQuantity = 0;              // number of pieces in the whole cart
 
 // ---------------------------------------------------------------------
-// 4. Small helpers
-// ---------------------------------------------------------------------
-const $ = id => document.getElementById(id);
-
-function money(value) {
-  return "Rs. " + Number(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-function esc(text) {                // stops HTML from being injected through names
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-let toastTimer;
-function toast(message, isError) {
-  const el = $("toast");
-  el.textContent = message;
-  el.className = "toast show" + (isError ? " error" : "");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { el.className = "toast"; }, 3000);
-}
-
-// ---------------------------------------------------------------------
-// 5. Draw the menu and the cart
+// 4. Draw the menu and the cart
 // ---------------------------------------------------------------------
 function renderMenu() {
   const categories = [...new Set(MENU.map(p => p.category))];
@@ -178,12 +132,14 @@ function renderCart() {
 
   // the number in the navbar counts the whole cart (not the search result)
   if (!searchText) {
-    $("cartCount").textContent = items.reduce((sum, i) => sum + i.quantity, 0);
+    cartQuantity = items.reduce((sum, i) => sum + i.quantity, 0);
+    $("cartCount").textContent = cartQuantity;
   }
+  $("orderBtn").disabled = cartQuantity === 0;
 }
 
 // ---------------------------------------------------------------------
-// 6. Actions (each one calls the API, then reloads the cart)
+// 5. Actions (each one calls the API, then reloads the cart)
 // ---------------------------------------------------------------------
 async function loadCart(firstLoad) {
   try {
@@ -247,8 +203,22 @@ async function clearCart() {
   }
 }
 
+// Place the order: the backend turns the whole cart into an order and empties the cart
+async function placeOrder() {
+  if (api === demoApi) {
+    toast("Demo mode: start the Spring Boot backend to place a real order.", true);
+    return;
+  }
+  try {
+    const order = await liveOrderApi.place(USER_ID, $("orderNote").value.trim());
+    window.location.href = "orders.html?placed=" + order.id;   // order confirmation
+  } catch (err) {
+    toast(err.message, true);
+  }
+}
+
 // ---------------------------------------------------------------------
-// 7. Connect the buttons (event delegation: one listener per area)
+// 6. Connect the buttons (event delegation: one listener per area)
 // ---------------------------------------------------------------------
 $("menu").addEventListener("click", e => {
   const btn = e.target.closest("[data-add]");
@@ -265,6 +235,7 @@ $("cartList").addEventListener("click", e => {
 });
 
 $("clearBtn").addEventListener("click", clearCart);
+$("orderBtn").addEventListener("click", placeOrder);
 
 let searchTimer;
 $("search").addEventListener("input", e => {   // wait a moment while the user types
@@ -276,7 +247,7 @@ $("search").addEventListener("input", e => {   // wait a moment while the user t
 });
 
 // ---------------------------------------------------------------------
-// 8. Start
+// 7. Start
 // ---------------------------------------------------------------------
 renderMenu();
 loadCart(true);

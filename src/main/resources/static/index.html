@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sweet Bloom | Menu and Cart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap">
+      <a class="brand" href="index.html">SWEET BLOOM</a>
+      <nav class="nav-links" aria-label="Main">
+        <a class="nav-link" href="index.html" aria-current="page">Menu</a>
+        <a class="nav-link" href="orders.html">My orders</a>
+        <a class="nav-link" href="payments.html">My payments</a>
+        <a class="nav-link" href="admin-orders.html">Admin</a>
+        <a class="nav-link" href="admin-payments.html">Admin payments</a>
+        <a class="nav-link" href="index.html#cart">Cart (<span id="cartCount">0</span>)</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="banner" id="demoBanner" hidden>
+    Could not reach the Spring Boot backend, so this page is showing demo data.
+  </div>
+
+  <main class="wrap">
+    <section class="intro">
+      <h1>Baked this morning, ready for your table.</h1>
+      <p>Choose from today's menu, then place your order when your cart is ready.</p>
+    </section>
+
+    <div class="layout">
+      <!-- Menu (dummy data from app.js) -->
+      <section id="menu" aria-label="Menu"></section>
+
+      <!-- Cart and checkout (data from the Spring Boot API) -->
+      <section class="cart" id="cart" aria-label="Your cart">
+        <h2>Your cart</h2>
+        <input class="search" id="search" type="search" placeholder="Search your cart" aria-label="Search your cart">
+        <div class="cart-list" id="cartList" aria-live="polite"></div>
+        <div class="cart-foot">
+          <div>
+            <div class="total-label">Total</div>
+            <div class="total" id="cartTotal">Rs. 0.00</div>
+          </div>
+          <button class="btn" id="clearBtn" type="button">[ Clear cart ]</button>
+        </div>
+
+        <div class="checkout">
+          <label class="field-label" for="orderNote">Note for the bakery (optional)</label>
+          <input class="search" id="orderNote" type="text" maxlength="200" placeholder="For example: no nuts, please">
+          <button class="btn btn-primary" id="orderBtn" type="button">[ Place order ]</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">Sweet Bloom Bakery. SE1020 group project.</div>
+  </footer>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="js/common.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

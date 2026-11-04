@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sweet Bloom | Pay for an order</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap">
+      <a class="brand" href="index.html">SWEET BLOOM</a>
+      <nav class="nav-links" aria-label="Main">
+        <a class="nav-link" href="index.html">Menu</a>
+        <a class="nav-link" href="orders.html">My orders</a>
+        <a class="nav-link" href="payments.html" aria-current="page">My payments</a>
+        <a class="nav-link" href="admin-orders.html">Admin</a>
+        <a class="nav-link" href="admin-payments.html">Admin payments</a>
+        <a class="nav-link" href="index.html#cart">Cart</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="banner" id="demoBanner" hidden>
+    Could not reach the Spring Boot backend, so this page is showing demo data.
+  </div>
+
+  <main class="wrap">
+    <section class="intro compact">
+      <h1>Pay for your order</h1>
+      <p>Choose an order and a payment method. The amount comes from your order, so it cannot be changed on this page.</p>
+    </section>
+
+    <div class="confirm" id="receipt" hidden>
+      <h2>Payment recorded.</h2>
+      <p id="receiptText"></p>
+      <p><a href="payments.html">See your payment history</a></p>
+    </div>
+
+    <div class="layout pay-layout">
+      <section aria-labelledby="orderHeading">
+        <h2 class="pay-heading" id="orderHeading">Your unpaid orders</h2>
+        <div class="choices" id="orderChoices" role="radiogroup" aria-labelledby="orderHeading" aria-live="polite"></div>
+      </section>
+
+      <section class="pay-box" aria-labelledby="methodHeading">
+        <h2 class="pay-heading" id="methodHeading">Payment method</h2>
+
+        <div class="choices" role="radiogroup" aria-labelledby="methodHeading">
+          <label class="choice">
+            <input type="radio" name="method" value="CARD" checked>
+            <span class="choice-body">
+              <span class="choice-title">Card</span>
+              <span class="muted">2% card fee</span>
+            </span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="method" value="CASH_ON_DELIVERY">
+            <span class="choice-body">
+              <span class="choice-title">Cash on delivery</span>
+              <span class="muted">Flat Rs. 100.00 fee</span>
+            </span>
+          </label>
+        </div>
+
+        <div id="cardFields" class="card-fields">
+          <label class="field-label" for="holder">Name on card</label>
+          <input class="search" id="holder" type="text" maxlength="60" autocomplete="cc-name">
+
+          <label class="field-label" for="cardNumber">Card number (16 digits)</label>
+          <input class="search" id="cardNumber" type="text" inputmode="numeric" maxlength="19" autocomplete="off" placeholder="1234 5678 9012 3456">
+          <p class="muted">Only the last 4 digits are saved. The full number is never stored.</p>
+        </div>
+
+        <dl class="sum" aria-live="polite">
+          <div><dt>Order amount</dt><dd id="sumAmount">Rs. 0.00</dd></div>
+          <div><dt>Fee</dt><dd id="sumFee">Rs. 0.00</dd></div>
+          <div class="sum-total"><dt>Total to pay</dt><dd id="sumTotal">Rs. 0.00</dd></div>
+        </dl>
+        <p class="muted">The fee shown here is a preview. The server calculates the final fee.</p>
+
+        <button class="btn btn-primary" id="payBtn" type="button" disabled>[ Pay now ]</button>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">Sweet Bloom Bakery. SE1020 group project.</div>
+  </footer>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="js/common.js"></script>
+  <script src="js/payment-common.js"></script>
+  <script src="js/payment.js"></script>
+</body>
+</html>

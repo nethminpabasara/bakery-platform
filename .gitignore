@@ -31,4 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
-data/
+
+# Local database, catalogue and uploads
+/data/
+*.mv.db
+*.trace.db
+*.lock.db

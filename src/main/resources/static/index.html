@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweet Bloom Bakery | Artisan Bakery &amp; Custom Cake Booking Platform</title>
+    <meta name="description" content="Order freshly baked croissants, donuts, breads and book customized celebration cakes with our interactive platform.">
+    <!-- Google Fonts & Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥐</text></svg>">
+  <script src="/js/site-images.js"></script>
+</head>
+<body>
+
+    <!-- ====================================================================
+         NAVIGATION BAR
+         ==================================================================== -->
+    <nav class="navbar" id="mainNavbar">
+        <div class="navbar-container">
+            <a href="index.html" class="brand-logo" id="navBrand">
+                <span class="brand-icon">🧁</span>
+                <span>Sweet Bloom <em>Patisserie</em></span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link active" id="navHome">Home</a></li>
+                <li><a href="bakery.html" class="nav-link" id="navBakery">Daily Bakery</a></li>
+                <li><a href="custom-cake.html#custom-cake-builder" class="nav-link" id="navCustomCake">Book Cake</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="bakery.html" class="cart-icon-btn" id="navCartBtn" title="View Cart">
+                    🛒
+                    <span class="cart-badge" style="display:none;">0</span>
+                </a>
+                
+                <!-- Profile Button / Dropdown -->
+                <div class="nav-profile-wrapper" id="navProfileWrapper">
+                    <a href="login.html" class="btn-profile-nav" id="navProfileBtn" title="Account">
+                        <span class="profile-nav-icon">👤</span>
+                        <span class="profile-nav-name">Sign In</span>
+                    </a>
+                </div>
+
+                <a href="custom-cake.html#custom-cake-builder" class="btn-pill btn-strawberry" id="navBookBtn">
+                    ✨ Book Custom Cake
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ====================================================================
+         SECTION 1 — HERO SCROLL ANIMATION
+         108 sequential frames rendered to sticky canvas linked to scroll progress
+         ==================================================================== -->
+    <section class="hero-scroll-section" id="heroScrollSection">
+        <div class="hero-sticky-container" id="heroStickyContainer">
+            <div class="hero-split-layout">
+                <!-- LEFT SIDE (70%): Main Hero Animation -->
+                <div class="hero-left-col" id="heroLeftCol">
+                    <canvas id="heroCanvas" class="hero-canvas"></canvas>
+                    <!-- Preloader Progress Indicator -->
+                    <div class="hero-loader-bar" id="heroLoaderBar"></div>
+                    <!-- Scroll Indicator under animation area -->
+                    <div class="hero-scroll-indicator" id="heroScrollIndicator">
+                        <div class="scroll-mouse-icon">
+                            <div class="scroll-wheel"></div>
+                        </div>
+                        <span>SCROLL TO EXPLORE</span>
+                        <span class="scroll-arrow">⌄</span>
+                    </div>
+                </div>
+
+                <!-- RIGHT SIDE (30%): Promo Card Panel -->
+                <div class="hero-right-col" id="heroRightCol">
+                    <div class="hero-promo-card-wrapper">
+                        <!-- CARD 1: Fresh Bakery Today (Frames 1–63) -->
+                        <div class="hero-promo-card is-active" id="heroPromoCard1">
+                            <div class="promo-card-bg">
+                                <img src="/images/hero/1.png" alt="Fresh Bakery Items" class="promo-card-img">
+                                <div class="promo-card-gradient"></div>
+                            </div>
+                            <div class="promo-card-content">
+                                <span class="promo-card-tag">Fresh Bakery Today</span>
+                                <h2 class="promo-card-title">Order Fresh Bakery Items</h2>
+                                <p class="promo-card-desc">Discover warm pastries, donuts, buns, rolls and freshly baked favorites prepared for everyday cravings.</p>
+                                <a href="bakery.html" class="btn-hero-promo btn-bakery-promo" id="heroBakeryOrderBtn">
+                                    <span>Order Bakery Items</span>
+                                    <span class="btn-arrow">→</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- CARD 2: Custom Cake Booking (Frame 64 Onward) -->
+                        <div class="hero-promo-card" id="heroPromoCard2">
+                            <div class="promo-card-bg">
+                                <img src="/images/hero/2.png" alt="Custom Celebration Cakes" class="promo-card-img">
+                                <div class="promo-card-gradient"></div>
+                            </div>
+                            <div class="promo-card-content">
+                                <span class="promo-card-tag">Made for Your Special Moment</span>
+                                <h2 class="promo-card-title">Book Your Custom Cake</h2>
+                                <p class="promo-card-desc">Explore premium celebration cakes, floral birthday cakes and elegant tiered creations for every special occasion.</p>
+                                <a href="custom-cake.html" class="btn-hero-promo btn-cake-promo" id="heroCustomCakeBtn">
+                                    <span>Book Custom Cake</span>
+                                    <span class="btn-arrow">→</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================================
+         SECTION 2 — HORIZONTAL BAKERY IMAGE GALLERY
+         Row 1: Section 2 folder (Moves Right to Left on Scroll)
+         Row 2: Section 3 folder (Moves Left to Right on Scroll)
+         ==================================================================== -->
+    <section class="gallery-section" id="gallerySection">
+        <div class="section-header">
+            <span class="section-eyebrow">Fresh From Our Ovens</span>
+            <h2 class="section-title">Explore Our Bakery</h2>
+            <p class="section-subtitle">
+                Each pastry and cake is lovingly sculpted using time-honored artisanal methods, European creamery butter, and decadent Belgian chocolate.
+            </p>
+        </div>
+
+        <div class="gallery-tracks-wrapper">
+            <!-- ROW 1: Right-to-Left Motion (Folder: 2-Bakery Gallery/Section 2) -->
+            <div class="gallery-track-outer">
+                <div class="gallery-track-inner" id="galleryRow1">
+                    <!-- Card 1 -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-2/1.png" alt="Decadent Chocolate Cake" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">Signature Cake</span>
+                            <h3 class="gallery-card-title">Triple Chocolate Drip Cake</h3>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-2/2.png" alt="Golden Savory Brioche" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">Artisan Bun</span>
+                            <h3 class="gallery-card-title">Herbed Cheese Savory Brioche</h3>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-2/3.png" alt="Chocolate Éclairs" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">French Pastry</span>
+                            <h3 class="gallery-card-title">Bourbon Ganache Éclairs</h3>
+                        </div>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-2/4.png" alt="Artisan Sourdough" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">Slow Ferment</span>
+                            <h3 class="gallery-card-title">Country Artisan Sourdough</h3>
+                        </div>
+                    </div>
+
+                    <!-- Seamless Repeated Items for Infinite Track -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-2/1.png" alt="Decadent Chocolate Cake" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">Signature Cake</span>
+                            <h3 class="gallery-card-title">Triple Chocolate Drip Cake</h3>
+                        </div>
+                    </div>
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-2/2.png" alt="Golden Savory Brioche" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">Artisan Bun</span>
+                            <h3 class="gallery-card-title">Herbed Cheese Savory Brioche</h3>
+                        </div>
+                    </div>
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-2/3.png" alt="Chocolate Éclairs" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">French Pastry</span>
+                            <h3 class="gallery-card-title">Bourbon Ganache Éclairs</h3>
+                        </div>
+                    </div>
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-2/4.png" alt="Artisan Sourdough" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">Slow Ferment</span>
+                            <h3 class="gallery-card-title">Country Artisan Sourdough</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 2: Left-to-Right Motion (Folder: 2-Bakery Gallery/Section 3) -->
+            <div class="gallery-track-outer">
+                <div class="gallery-track-inner" id="galleryRow2">
+                    <!-- Card 1 -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-3/1.png" alt="Berry Cupcakes" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">Gourmet Cupcake</span>
+                            <h3 class="gallery-card-title">Berry Velvet Bliss Cupcake</h3>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-3/2.png" alt="Strawberry Cream Cupcake" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">Sweet Treat</span>
+                            <h3 class="gallery-card-title">Strawberry Cream Delight</h3>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-3/3.png" alt="Rich Cocoa Treat" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">Chocolatier</span>
+                            <h3 class="gallery-card-title">Double Dutch Cocoa Swirl</h3>
+                        </div>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-3/4.png" alt="Petite Patisserie" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">Patisserie</span>
+                            <h3 class="gallery-card-title">Petite Vanilla Bean Dream</h3>
+                        </div>
+                    </div>
+
+                    <!-- Seamless Repeated Items -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-3/1.png" alt="Berry Cupcakes" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">Gourmet Cupcake</span>
+                            <h3 class="gallery-card-title">Berry Velvet Bliss Cupcake</h3>
+                        </div>
+                    </div>
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-3/2.png" alt="Strawberry Cream Cupcake" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">Sweet Treat</span>
+                            <h3 class="gallery-card-title">Strawberry Cream Delight</h3>
+                        </div>
+                    </div>
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-3/3.png" alt="Rich Cocoa Treat" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">Chocolatier</span>
+                            <h3 class="gallery-card-title">Double Dutch Cocoa Swirl</h3>
+                        </div>
+                    </div>
+                    <div class="gallery-card">
+                        <div class="gallery-card-img-wrap">
+                            <img src="/images/gallery/section-3/4.png" alt="Petite Patisserie" loading="lazy">
+                        </div>
+                        <div class="gallery-card-body">
+                            <span class="gallery-card-tag">Patisserie</span>
+                            <h3 class="gallery-card-title">Petite Vanilla Bean Dream</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================================
+         SECTION 3 — SERVICE CHOICE: BAKERY ITEMS & CUSTOM CAKES
+         "Choose What You Need"
+         ==================================================================== -->
+    <section class="services-choice-section" id="orderBookingSection">
+        <div class="services-choice-header">
+            <span class="services-choice-eyebrow">✨ Handcrafted With Passion</span>
+            <h2 class="services-choice-title">Choose What You Need</h2>
+            <p class="services-choice-subtitle">
+                Order fresh bakery favorites or explore cakes for your special moments.
+            </p>
+        </div>
+
+        <div class="services-cards-grid">
+            
+            <!-- LEFT CARD: BAKERY ITEMS -->
+            <div class="service-card" id="cardBakery">
+                <img src="/images/common/bakery.png" 
+                     alt="Fresh Bakery Items - Croissants, Pastries and Artisan Breads" 
+                     class="service-card-bg-img"
+                     loading="lazy"
+                     onerror="if(this.src.indexOf('bakery-card.png')===-1)this.src='/images/common/bakery.png';">
+                
+                <div class="service-card-overlay">
+                    <div class="service-card-content">
+                        <span class="service-card-tag">🥐 DAILY OVEN FRESH</span>
+                        <h3 class="service-card-heading">Fresh Bakery, Ready Today</h3>
+                        <p class="service-card-desc">
+                            Craving something fresh right now? Enjoy freshly baked bakery favorites, savory delights and sweet treats prepared for everyday enjoyment.
+                        </p>
+                        
+                        <ul class="service-benefits-grid">
+                            <li class="service-benefit-item">
+                                <span class="benefit-check-icon">✓</span>
+                                <span>Baked fresh daily</span>
+                            </li>
+                            <li class="service-benefit-item">
+                                <span class="benefit-check-icon">✓</span>
+                                <span>Quick ordering</span>
+                            </li>
+                            <li class="service-benefit-item">
+                                <span class="benefit-check-icon">✓</span>
+                                <span>Instant pickup / delivery</span>
+                            </li>
+                            <li class="service-benefit-item">
+                                <span class="benefit-check-icon">✓</span>
+                                <span>Sweet &amp; savory selections</span>
+                            </li>
+                        </ul>
+
+                        <div class="service-card-actions">
+                            <a href="bakery.html" class="btn-service-cta btn-service-primary btn-service-full" id="exploreBakeryMenuBtn">
+                                <span>Explore Bakery Menu</span>
+                                <span class="btn-arrow">&rarr;</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="service-card-visual-space" aria-hidden="true"></div>
+                </div>
+            </div>
+
+            <!-- RIGHT CARD: CUSTOM CAKES -->
+            <div class="service-card" id="cardCustomCake">
+                <img src="/images/common/cakes.png" 
+                     alt="Celebration & Custom Designer Cakes" 
+                     class="service-card-bg-img"
+                     loading="lazy"
+                     onerror="if(this.src.indexOf('cake-card.png')===-1)this.src='/images/common/cakes.png';">
+                
+                <div class="service-card-overlay">
+                    <div class="service-card-content">
+                        <span class="service-card-tag tag-cakes">🎂 TAILORED CELEBRATIONS</span>
+                        <h3 class="service-card-heading">Cakes for Every Special Moment</h3>
+                        <p class="service-card-desc">
+                            Choose from our ready-made cakes or create a custom cake designed for your celebration.
+                        </p>
+
+                        <ul class="service-benefits-grid">
+                            <li class="service-benefit-item">
+                                <span class="benefit-check-icon">✓</span>
+                                <span>Custom designs &amp; themes</span>
+                            </li>
+                            <li class="service-benefit-item">
+                                <span class="benefit-check-icon">✓</span>
+                                <span>Handcrafted celebrations</span>
+                            </li>
+                            <li class="service-benefit-item">
+                                <span class="benefit-check-icon">✓</span>
+                                <span>Flavor &amp; cake customization</span>
+                            </li>
+                            <li class="service-benefit-item">
+                                <span class="benefit-check-icon">✓</span>
+                                <span>Advance booking available</span>
+                            </li>
+                        </ul>
+
+                        <div class="service-card-actions">
+                            <a href="custom-cake.html#ready-made-cakes" class="btn-service-cta btn-service-primary" id="exploreReadyMadeCakesBtn">
+                                <span>Explore Ready-Made Cakes</span>
+                                <span class="btn-arrow">&rarr;</span>
+                            </a>
+                            <a href="custom-cake.html#custom-cake-builder" class="btn-service-cta btn-service-secondary" id="customizeYourCakeBtn">
+                                <span>Customize Your Cake</span>
+                                <span class="btn-arrow">&rsaquo;</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="service-card-visual-space" aria-hidden="true"></div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ====================================================================
+         SECTION 4 — HOW IT WORKS
+         3-step ordering process flow
+         ==================================================================== -->
+    <section class="how-it-works-section" id="howItWorksSection">
+        <div class="hiw-container">
+            <div class="hiw-header">
+                <span class="hiw-eyebrow">✨ Simple &amp; Easy Process</span>
+                <h2 class="hiw-title">How It Works</h2>
+                <p class="hiw-subtitle">
+                    From choosing your favorite item to receiving your order, it’s simple and easy.
+                </p>
+            </div>
+
+            <div class="hiw-flow-container">
+                
+                <!-- CARD 1 -->
+                <div class="hiw-card hiw-step-1" id="hiwStep1">
+                    <div class="hiw-card-img-wrap">
+                        <img src="/images/how-it-works/1.png" alt="Choose Your Favorite - Step 1" class="hiw-card-img" loading="lazy">
+                        <span class="hiw-step-badge">01</span>
+                    </div>
+                    <div class="hiw-card-body">
+                        <h3 class="hiw-card-title">Choose Your Favorite</h3>
+                        <p class="hiw-card-desc">
+                            Browse bakery items, ready-made cakes, or choose the custom cake option.
+                        </p>
+                        <div class="hiw-card-tagline">
+                            <span>Bakery Items</span>
+                            <span class="hiw-tag-dot">•</span>
+                            <span>Cakes</span>
+                            <span class="hiw-tag-dot">•</span>
+                            <span>Birthday Cakes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ARROW 1 -> 2 -->
+                <div class="hiw-arrow-separator hiw-arrow-1" aria-hidden="true" title="Next step">
+                    <svg class="hiw-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="13 6 19 12 13 18"></polyline>
+                    </svg>
+                </div>
+
+                <!-- CARD 2 -->
+                <div class="hiw-card hiw-step-2" id="hiwStep2">
+                    <div class="hiw-card-img-wrap">
+                        <img src="/images/how-it-works/2.png" alt="Customize Your Order - Step 2" class="hiw-card-img" loading="lazy">
+                        <span class="hiw-step-badge">02</span>
+                    </div>
+                    <div class="hiw-card-body">
+                        <h3 class="hiw-card-title">Customize Your Order</h3>
+                        <p class="hiw-card-desc">
+                            Select quantity or personalize your cake with your preferred shape, flavor, filling, decoration and message.
+                        </p>
+                        <div class="hiw-card-tagline">
+                            <span>Shape</span>
+                            <span class="hiw-tag-dot">•</span>
+                            <span>Flavor</span>
+                            <span class="hiw-tag-dot">•</span>
+                            <span>Design</span>
+                            <span class="hiw-tag-dot">•</span>
+                            <span>Message</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ARROW 2 -> 3 -->
+                <div class="hiw-arrow-separator hiw-arrow-2" aria-hidden="true" title="Next step">
+                    <svg class="hiw-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="13 6 19 12 13 18"></polyline>
+                    </svg>
+                </div>
+
+                <!-- CARD 3 -->
+                <div class="hiw-card hiw-step-3" id="hiwStep3">
+                    <div class="hiw-card-img-wrap">
+                        <img src="/images/how-it-works/3.png" alt="Order & Receive - Step 3" class="hiw-card-img" loading="lazy">
+                        <span class="hiw-step-badge">03</span>
+                    </div>
+                    <div class="hiw-card-body">
+                        <h3 class="hiw-card-title">Order &amp; Receive</h3>
+                        <p class="hiw-card-desc">
+                            Confirm your order, choose pickup or delivery, and receive your order on the selected date.
+                        </p>
+                        <div class="hiw-card-tagline">
+                            <span>Checkout</span>
+                            <span class="hiw-tag-dot">•</span>
+                            <span>Pickup</span>
+                            <span class="hiw-tag-dot">•</span>
+                            <span>Delivery</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- ====================================================================
+         SECTION 6 — WHY CHOOSE US
+         Quality, convenience and creativity in every order (Icon-based)
+         ==================================================================== -->
+    <section class="why-choose-us-section" id="whyChooseUsSection">
+        <div class="wcu-container">
+            <div class="wcu-header">
+                <span class="wcu-eyebrow">
+                    <span class="wcu-eyebrow-star">⭐</span>
+                    <span>The Sweet Bloom Standard</span>
+                </span>
+                <h2 class="wcu-title">Why Choose Us</h2>
+                <p class="wcu-subtitle">
+                    Quality, convenience and creativity in every order.
+                </p>
+            </div>
+
+            <!-- 4 Feature Cards Grid -->
+            <div class="wcu-cards-grid" id="wcuCardsGrid">
+                
+                <!-- CARD 1: Freshly Baked -->
+                <div class="wcu-card" id="wcuCard1">
+                    <div class="wcu-icon-box">
+                        <svg class="wcu-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 12c1.66 0 3 1.34 3 3 0 2.76-2.24 5-5 5H7c-2.76 0-5-2.24-5-5 0-1.66 1.34-3 3-3 0-3.87 3.13-7 7-7s7 3.13 7 7z"></path>
+                            <path d="M8 9.5c.8-1 2-1.5 3-1.5"></path>
+                            <path d="M13 8c.8 0 2 .5 3 1.5"></path>
+                            <path d="M11 14.5c.3-.5 1-.8 1.8-.8s1.5.3 1.8.8"></path>
+                        </svg>
+                    </div>
+                    <h3 class="wcu-card-title">Freshly Baked</h3>
+                    <p class="wcu-card-desc">
+                        Freshly prepared bakery items made for everyday enjoyment.
+                    </p>
+                </div>
+
+                <!-- CARD 2: Custom Designs -->
+                <div class="wcu-card" id="wcuCard2">
+                    <div class="wcu-icon-box">
+                        <svg class="wcu-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"></path>
+                            <path d="M4 21h16"></path>
+                            <path d="M7 11V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4"></path>
+                            <line x1="12" y1="2" x2="12" y2="5"></line>
+                            <path d="M4 15c1 1 2 1 3 0s2-1 3 0 2 1 3 0 2-1 3 0 2 1 3 0"></path>
+                        </svg>
+                    </div>
+                    <h3 class="wcu-card-title">Custom Designs</h3>
+                    <p class="wcu-card-desc">
+                        Create cakes with your preferred shape, flavor, filling and decoration.
+                    </p>
+                </div>
+
+                <!-- CARD 3: Easy Ordering -->
+                <div class="wcu-card" id="wcuCard3">
+                    <div class="wcu-icon-box">
+                        <svg class="wcu-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="20" r="1.5"></circle>
+                            <circle cx="18" cy="20" r="1.5"></circle>
+                            <path d="M2 3h3l2.5 11.5a1.5 1.5 0 0 0 1.5 1.2h9a1.5 1.5 0 0 0 1.5-1.1L21 7H6"></path>
+                            <path d="M11 10l2 2 4-4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="wcu-card-title">Easy Ordering</h3>
+                    <p class="wcu-card-desc">
+                        Browse, customize and place your order through a simple process.
+                    </p>
+                </div>
+
+                <!-- CARD 4: Pickup & Delivery -->
+                <div class="wcu-card" id="wcuCard4">
+                    <div class="wcu-icon-box">
+                        <svg class="wcu-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="1" y="3" width="15" height="13" rx="2"></rect>
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
+                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                            <path d="M5 8h4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="wcu-card-title">Pickup &amp; Delivery</h3>
+                    <p class="wcu-card-desc">
+                        Choose convenient pickup or delivery for your order.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================================
+         FOOTER
+         Professional 4-column footer matching Sweet Bloom Patisserie style
+         ==================================================================== -->
+    <footer class="site-footer" id="siteFooter">
+        <div class="footer-container">
+            <!-- COLUMN 1: BRAND INFORMATION -->
+                <div class="footer-col footer-col-brand">
+                    <a href="index.html" class="footer-brand-logo" aria-label="Sweet Bloom Patisserie Home">
+                        <span class="footer-brand-icon">🧁</span>
+                        <span class="footer-brand-text">Sweet Bloom <em>Patisserie</em></span>
+                    </a>
+                    <p class="footer-brand-desc">
+                        Fresh bakery favorites and beautifully crafted cakes for every special moment.
+                    </p>
+                    <span class="footer-tagline">Freshly Baked. Beautifully Made.</span>
+                    <div class="footer-social-links" aria-label="Social media channels">
+                        <a href="https://facebook.com" class="social-icon-btn" aria-label="Follow us on Facebook" target="_blank" rel="noopener noreferrer">
+                            <svg viewBox="0 0 24 24" fill="currentColor" class="social-svg"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                        </a>
+                        <a href="https://instagram.com" class="social-icon-btn" aria-label="Follow us on Instagram" target="_blank" rel="noopener noreferrer">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="social-svg"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        </a>
+                        <a href="https://whatsapp.com" class="social-icon-btn" aria-label="Contact us on WhatsApp" target="_blank" rel="noopener noreferrer">
+                            <svg viewBox="0 0 24 24" fill="currentColor" class="social-svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- COLUMN 2: QUICK LINKS -->
+                <div class="footer-col footer-col-links">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <nav aria-label="Footer Quick Links">
+                        <ul class="footer-nav-list">
+                            <li><a href="index.html" class="footer-link">Home</a></li>
+                            <li><a href="bakery.html" class="footer-link">Daily Bakery</a></li>
+                            <li><a href="custom-cake.html" class="footer-link">Custom Cakes</a></li>
+                            <li><a href="#howItWorksSection" class="footer-link">How It Works</a></li>
+                            <li><a href="#specialOffersSection" class="footer-link">Special Offers</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <!-- COLUMN 3: OUR SERVICES -->
+                <div class="footer-col footer-col-services">
+                    <h4 class="footer-heading">Our Services</h4>
+                    <nav aria-label="Footer Services Links">
+                        <ul class="footer-nav-list">
+                            <li><a href="bakery.html" class="footer-link">Order Bakery Items</a></li>
+                            <li><a href="custom-cake.html#ready-made-cakes" class="footer-link">Ready-Made Cakes</a></li>
+                            <li><a href="custom-cake.html#birthday-cakes" class="footer-link">Birthday Cakes</a></li>
+                            <li><a href="custom-cake.html#custom-cake-builder" class="footer-link">Customize Your Cake</a></li>
+                            <li><a href="#howItWorksSection" class="footer-link">Pickup &amp; Delivery</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <!-- COLUMN 4: CONTACT & OPENING INFO -->
+                <div class="footer-col footer-col-contact">
+                    <h4 class="footer-heading">Contact Us</h4>
+                    <address class="footer-address">
+                        <div class="footer-info-item">
+                            <span class="info-icon">📍</span>
+                            <span>Colombo, Sri Lanka</span>
+                        </div>
+                        <div class="footer-info-item">
+                            <span class="info-icon">📞</span>
+                            <a href="tel:+94112345678" class="footer-link">+94 11 234 5678</a>
+                        </div>
+                        <div class="footer-info-item">
+                            <span class="info-icon">✉️</span>
+                            <a href="mailto:hello@sweetbloom.lk" class="footer-link">hello@sweetbloom.lk</a>
+                        </div>
+                        <div class="footer-info-item hours-item">
+                            <span class="info-icon">🕒</span>
+                            <div>
+                                <span class="hours-label">Opening Hours:</span>
+                                <span class="hours-val">Mon – Sun: 8:00 AM – 8:00 PM</span>
+                                <div class="batch-hint">Fresh Batches: 07:00 &bull; 14:00</div>
+                            </div>
+                        </div>
+                    </address>
+                </div>
+
+        </div>
+
+        <!-- BOTTOM FOOTER BAR -->
+        <div class="footer-bottom-bar">
+            <div class="footer-bottom-container">
+                <p class="footer-copy-text">&copy; 2026 Sweet Bloom Patisserie. All rights reserved.</p>
+                <p class="footer-made-text">Made with care for every sweet moment.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+</body>
+</html>

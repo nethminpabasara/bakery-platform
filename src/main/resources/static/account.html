@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account | Sweet Bloom Patisserie</title>
+    <meta name="description" content="Manage your Sweet Bloom Patisserie customer profile, track orders, view deliveries, and monitor custom cake bookings.">
+    <!-- Google Fonts & Stylesheets -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧁</text></svg>">
+    <style>
+        /* ==========================================================================
+           CUSTOMER ACCOUNT / PROFILE STYLES
+           Cream, rose-pink, warm caramel & subtle gold accents
+           ========================================================================== */
+        body {
+            background-color: var(--color-cream-subtle, #FDF8F2);
+            color: var(--color-dark-roast, #2C1E16);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .account-page-header {
+            padding: calc(var(--navbar-height, 76px) + 2rem) 1.5rem 2rem 1.5rem;
+            background: linear-gradient(180deg, #F9EFE4 0%, #FFFDF9 100%);
+            border-bottom: 1px solid var(--color-border, #EADBCE);
+            text-align: center;
+        }
+
+        .account-header-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .account-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--color-strawberry, #C92C3D);
+            background: var(--color-strawberry-light, #FEECEF);
+            padding: 0.35rem 0.95rem;
+            border-radius: var(--radius-pill, 9999px);
+            margin-bottom: 0.75rem;
+        }
+
+        .account-title {
+            font-family: var(--font-heading, 'Playfair Display', Georgia, serif);
+            font-size: clamp(2rem, 3.2vw, 2.75rem);
+            font-weight: 700;
+            color: var(--color-dark-roast, #2C1E16);
+            margin-bottom: 0.45rem;
+        }
+
+        .account-subtitle {
+            font-size: 1rem;
+            color: var(--color-dark-muted, #5E4D43);
+            max-width: 580px;
+            margin: 0 auto;
+        }
+
+        /* Main Account Content Layout */
+        .account-main-wrapper {
+            max-width: 1200px;
+            margin: 2rem auto 4rem auto;
+            padding: 0 1.5rem;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .account-main-wrapper {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        /* Left Sidebar Nav */
+        .account-sidebar-card {
+            background: #FFFFFF;
+            border: 1px solid var(--color-border, #EADBCE);
+            border-radius: var(--radius-lg, 24px);
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(78, 48, 25, 0.05);
+            position: sticky;
+            top: 96px;
+        }
+
+        .sidebar-user-glance {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--color-border, #EADBCE);
+            margin-bottom: 1.25rem;
+        }
+
+        .sidebar-avatar {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #DF384A 0%, var(--color-strawberry, #C92C3D) 100%);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.45rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(201, 44, 61, 0.25);
+            flex-shrink: 0;
+        }
+
+        .sidebar-user-name {
+            font-family: var(--font-heading);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--color-dark-roast);
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        .sidebar-user-role-badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #2E7D32;
+            background: #E8F5E9;
+            padding: 0.2rem 0.55rem;
+            border-radius: 9999px;
+            margin-top: 0.25rem;
+        }
+
+        .account-nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+
+        .account-nav-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md, 14px);
+            border: 1px solid transparent;
+            background: none;
+            color: var(--color-dark-muted, #5E4D43);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-fast, 0.2s ease);
+            text-align: left;
+            text-decoration: none;
+        }
+
+        .account-nav-btn:hover {
+            background: #FDF8F2;
+            color: var(--color-strawberry, #C92C3D);
+        }
+
+        .account-nav-btn.active {
+            background: #FEECEF;
+            color: var(--color-strawberry, #C92C3D);
+            font-weight: 700;
+            border-color: #F9CAD2;
+        }
+
+        .account-nav-btn.logout-btn {
+            color: #C92C3D;
+            margin-top: 0.5rem;
+            border-top: 1px dashed var(--color-border);
+            padding-top: 0.85rem;
+            border-radius: 0;
+        }
+
+        .account-nav-btn.logout-btn:hover {
+            background: #FFF0F2;
+        }
+
+        /* Right Content Panels */
+        .account-content-card {
+            background: #FFFFFF;
+            border: 1px solid var(--color-border, #EADBCE);
+            border-radius: var(--radius-lg, 24px);
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(78, 48, 25, 0.05);
+            display: none;
+        }
+
+        .account-content-card.active {
+            display: block;
+            animation: fadeInTab 0.3s ease;
+        }
+
+        @keyframes fadeInTab {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel-heading {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--color-dark-roast);
+            margin-bottom: 0.4rem;
+        }
+
+        .panel-desc {
+            font-size: 0.92rem;
+            color: var(--color-dark-muted);
+            margin-bottom: 1.75rem;
+        }
+
+        /* Form Styles */
+        .account-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        @media (max-width: 650px) {
+            .account-form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .form-field-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-field-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--color-dark-roast);
+        }
+
+        .form-field-input {
+            padding: 0.85rem 1.1rem;
+            border-radius: var(--radius-md, 14px);
+            border: 1.5px solid var(--color-border, #EADBCE);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            background: #FFFFFF;
+            color: var(--color-dark-roast);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-field-input:focus {
+            outline: none;
+            border-color: var(--color-strawberry);
+            box-shadow: 0 0 0 3px rgba(201, 44, 61, 0.12);
+        }
+
+        .form-field-input:disabled, .form-field-input[readonly] {
+            background: #FDF8F2;
+            color: #8C7B70;
+            cursor: not-allowed;
+        }
+
+        .btn-save-profile {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #DF384A 0%, var(--color-strawberry, #C92C3D) 100%);
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius-pill);
+            padding: 0.85rem 2rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(201, 44, 61, 0.28);
+            transition: var(--transition-fast);
+            margin-top: 1rem;
+        }
+
+        .btn-save-profile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(201, 44, 61, 0.4);
+        }
+
+        /* Order & Booking Cards */
+        .records-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .record-card {
+            background: #FDF8F2;
+            border: 1px solid var(--color-border, #EADBCE);
+            border-radius: var(--radius-lg, 18px);
+            padding: 1.35rem 1.5rem;
+            transition: var(--transition-fast);
+        }
+
+        .record-card:hover {
+            box-shadow: 0 6px 20px rgba(78, 48, 25, 0.08);
+            border-color: #D8C3B3;
+        }
+
+        .record-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.85rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .record-id-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .record-id {
+            font-family: var(--font-heading);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--color-dark-roast);
+        }
+
+        .record-date {
+            font-size: 0.82rem;
+            color: var(--color-dark-muted);
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 0.3rem 0.85rem;
+            border-radius: 9999px;
+        }
+
+        .status-pending { background: #FFF3E0; color: #E65100; border: 1px solid #FFE0B2; }
+        .status-confirmed { background: #E3F2FD; color: #1565C0; border: 1px solid #BBDEFB; }
+        .status-preparing, .status-in_progress { background: #F3E5F5; color: #7B1FA2; border: 1px solid #E1BEE7; }
+        .status-ready { background: #E8EAF6; color: #283593; border: 1px solid #C5CAE9; }
+        .status-delivered, .status-completed { background: #E8F5E9; color: #2E7D32; border: 1px solid #C8E6C9; }
+        .status-cancelled { background: #FFEBEE; color: #C62828; border: 1px solid #FFCDD2; }
+
+        .record-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.85rem;
+            padding-top: 0.75rem;
+            border-top: 1px dashed var(--color-border);
+            font-size: 0.88rem;
+        }
+
+        .detail-item-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #8C7B70;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .detail-item-val {
+            color: var(--color-dark-roast);
+            font-weight: 600;
+        }
+
+        .record-price-highlight {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--color-strawberry);
+        }
+
+        /* Delivery Stepper */
+        .delivery-stepper-wrap {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--color-border);
+        }
+
+        .delivery-stepper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            margin-top: 0.5rem;
+        }
+
+        .stepper-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.35rem;
+            z-index: 2;
+            text-align: center;
+            width: 80px;
+        }
+
+        .stepper-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #EADBCE;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            transition: 0.3s ease;
+        }
+
+        .stepper-step.completed .stepper-circle {
+            background: #2E7D32;
+        }
+
+        .stepper-step.active .stepper-circle {
+            background: var(--color-strawberry);
+            box-shadow: 0 0 0 4px rgba(201, 44, 61, 0.2);
+        }
+
+        .stepper-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #8C7B70;
+        }
+
+        .stepper-step.completed .stepper-label,
+        .stepper-step.active .stepper-label {
+            color: var(--color-dark-roast);
+        }
+
+        /* Empty State Box */
+        .empty-records-card {
+            text-align: center;
+            padding: 3.5rem 1.5rem;
+            background: #FDF8F2;
+            border: 1px dashed var(--color-border);
+            border-radius: var(--radius-lg);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+
+        .empty-title {
+            font-family: var(--font-heading);
+            font-size: 1.35rem;
+            color: var(--color-dark-roast);
+            margin-bottom: 0.35rem;
+        }
+
+        .empty-desc {
+            font-size: 0.9rem;
+            color: var(--color-dark-muted);
+            max-width: 400px;
+            margin: 0 auto 1.5rem auto;
+        }
+
+        /* Toast Feedback */
+        .account-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #2C1E16;
+            color: #FFFFFF;
+            padding: 0.85rem 1.5rem;
+            border-radius: var(--radius-pill);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+            font-weight: 600;
+            z-index: 9999;
+            transform: translateY(30px);
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s ease;
+        }
+
+        .account-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+  <script src="/js/site-images.js"></script>
+</head>
+<body>
+
+    <!-- ====================================================================
+         NAVIGATION BAR
+         ==================================================================== -->
+    <nav class="navbar" id="mainNavbar">
+        <div class="navbar-container">
+            <a href="index.html" class="brand-logo" id="navBrand">
+                <span class="brand-icon">🧁</span>
+                <span>Sweet Bloom <em>Patisserie</em></span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link" id="navHome">Home</a></li>
+                <li><a href="bakery.html" class="nav-link" id="navBakery">Daily Bakery</a></li>
+                <li><a href="custom-cake.html#custom-cake-builder" class="nav-link" id="navCustomCake">Book Cake</a></li>
+                <li><a href="/my-orders" class="nav-link" id="navOrders">My Orders</a></li>
+                <li><a href="/my-bookings" class="nav-link" id="navBookings">My Bookings</a></li>
+                <li><a href="account.html" class="nav-link active" id="navProfile">Profile</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="bakery.html" class="cart-icon-btn" id="navCartBtn" title="View Cart">
+                    🛒
+                    <span class="cart-badge" id="navCartBadge" style="display:none;">0</span>
+                </a>
+                
+                <!-- Profile Button / Dropdown -->
+                <div class="nav-profile-wrapper" id="navProfileWrapper">
+                    <a href="account.html" class="btn-profile-nav is-active" id="navProfileBtn">
+                        <span class="profile-nav-icon">👤</span>
+                        <span class="profile-nav-name" id="navProfileName">My Account</span>
+                    </a>
+                </div>
+
+                <a href="custom-cake.html#custom-cake-builder" class="btn-pill btn-strawberry" id="navBookBtn">
+                    ✨ Book Custom Cake
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ====================================================================
+         PAGE HERO BANNER
+         ==================================================================== -->
+    <header class="account-page-header">
+        <div class="account-header-container">
+            <span class="account-eyebrow">🌸 Customer Portal</span>
+            <h1 class="account-title" id="accountWelcomeTitle">My Account</h1>
+            <p class="account-subtitle">Manage your personal profile, review order history, check live deliveries, and monitor your custom cake reservations.</p>
+        </div>
+    </header>
+
+    <!-- ====================================================================
+         MAIN CONTENT: SIDEBAR + CONTENT TABS
+         ==================================================================== -->
+    <main class="account-main-wrapper">
+        
+        <!-- LEFT SIDEBAR -->
+        <aside class="account-sidebar-card">
+            <div class="sidebar-user-glance">
+                <div class="sidebar-avatar" id="avatarInitial">U</div>
+                <div>
+                    <div class="sidebar-user-name" id="sidebarFullName">Customer</div>
+                    <span class="sidebar-user-role-badge">Customer Account</span>
+                </div>
+            </div>
+
+            <ul class="account-nav-list">
+                <li>
+                    <button type="button" class="account-nav-btn active" data-tab="tabProfile" onclick="switchAccountTab('tabProfile')">
+                        <span>👤</span> <span>Profile Details</span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="account-nav-btn" data-tab="tabOrders" onclick="switchAccountTab('tabOrders')">
+                        <span>📦</span> <span>My Orders</span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="account-nav-btn" data-tab="tabDeliveries" onclick="switchAccountTab('tabDeliveries')">
+                        <span>🚚</span> <span>Delivery Information</span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="account-nav-btn" data-tab="tabBookings" onclick="switchAccountTab('tabBookings')">
+                        <span>🎂</span> <span>Cake Bookings</span>
+                    </button>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" onclick="handleLogout()" class="account-nav-btn logout-btn">
+                        <span>🚪</span> <span>Sign Out</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- RIGHT TAB CONTENT -->
+        <section class="account-content-panels">
+            
+            <!-- 1. PROFILE DETAILS TAB -->
+            <div class="account-content-card active" id="tabProfile">
+                <h2 class="panel-heading">Profile Details</h2>
+                <p class="panel-desc">Update your personal contact details and saved delivery address for seamless checkout.</p>
+
+                <form id="profileUpdateForm" onsubmit="handleProfileUpdate(event)">
+                    <div class="account-form-grid">
+                        <div class="form-field-group">
+                            <label class="form-field-label" for="profileFullName">Full Name *</label>
+                            <input type="text" id="profileFullName" name="fullName" class="form-field-input" required placeholder="Your full name">
+                        </div>
+
+                        <div class="form-field-group">
+                            <label class="form-field-label" for="profileEmail">Email Address (Read-Only)</label>
+                            <input type="email" id="profileEmail" name="email" class="form-field-input" readonly title="Account email cannot be modified">
+                        </div>
+
+                        <div class="form-field-group">
+                            <label class="form-field-label" for="profilePhone">Phone Number</label>
+                            <input type="tel" id="profilePhone" name="phone" class="form-field-input" placeholder="e.g. +94 77 123 4567">
+                        </div>
+
+                        <div class="form-field-group">
+                            <label class="form-field-label" for="profileRole">Account Access Level</label>
+                            <input type="text" id="profileRole" class="form-field-input" value="Customer (Protected Role)" readonly disabled>
+                        </div>
+
+                        <div class="form-field-group full-width">
+                            <label class="form-field-label" for="profileAddress">Default Delivery Address</label>
+                            <input type="text" id="profileAddress" name="address" class="form-field-input" placeholder="e.g. No. 45, Flower Road, Colombo 07">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-save-profile" id="btnSaveProfile">
+                        <span>💾</span> <span>Save Profile Changes</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- 2. MY ORDERS TAB -->
+            <div class="account-content-card" id="tabOrders">
+                <h2 class="panel-heading">My Bakery Orders</h2>
+                <p class="panel-desc">Review your past and active orders placed from our daily bakery catalog.</p>
+
+                <div class="records-list" id="ordersListContainer">
+                    <!-- Populated dynamically via JS API -->
+                    <div class="empty-records-card">
+                        <span class="empty-icon">⏳</span>
+                        <h3 class="empty-title">Loading your orders...</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. DELIVERY INFORMATION TAB -->
+            <div class="account-content-card" id="tabDeliveries">
+                <h2 class="panel-heading">Delivery Information</h2>
+                <p class="panel-desc">Track progress, fulfillment types, and shipping addresses for all your active deliveries.</p>
+
+                <div class="records-list" id="deliveriesListContainer">
+                    <!-- Populated dynamically via JS API -->
+                    <div class="empty-records-card">
+                        <span class="empty-icon">⏳</span>
+                        <h3 class="empty-title">Loading deliveries...</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. CUSTOM CAKE BOOKINGS TAB -->
+            <div class="account-content-card" id="tabBookings">
+                <h2 class="panel-heading">Custom Cake Bookings</h2>
+                <p class="panel-desc">Monitor your bespoke celebration cake reservations, design themes, and event dates.</p>
+
+                <div class="records-list" id="bookingsListContainer">
+                    <!-- Populated dynamically via JS API -->
+                    <div class="empty-records-card">
+                        <span class="empty-icon">⏳</span>
+                        <h3 class="empty-title">Loading cake bookings...</h3>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="account-toast" id="accountToast">
+        <span id="accountToastIcon">✨</span>
+        <span id="accountToastMsg">Saved successfully</span>
+    </div>
+
+    <!-- ====================================================================
+         FOOTER
+         ==================================================================== -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-col footer-col-brand">
+                <div class="footer-brand-logo">
+                    <span class="brand-icon">🧁</span>
+                    <span class="brand-name">Sweet Bloom <em>Patisserie</em></span>
+                </div>
+                <p class="footer-brand-desc">Artisanal European bakery crafting daily fresh croissants, artisan pastries and custom celebration cakes.</p>
+            </div>
+            <div class="footer-col">
+                <h4 class="footer-col-title">Quick Links</h4>
+                <ul class="footer-links-list">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="bakery.html">Daily Bakery</a></li>
+                    <li><a href="custom-cake.html">Custom Cake Booking</a></li>
+                    <li><a href="/my-orders">My Orders</a></li>
+                    <li><a href="/my-bookings">My Bookings</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4 class="footer-col-title">Our Services</h4>
+                <ul class="footer-links-list">
+                    <li><a href="bakery.html">Artisan Croissants</a></li>
+                    <li><a href="custom-cake.html">Custom Birthday Cakes</a></li>
+                    <li><a href="custom-cake.html">Wedding Cake Design</a></li>
+                    <li><a href="orders.html">Track Order Status</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4 class="footer-col-title">Contact Us</h4>
+                <ul class="footer-contact-list">
+                    <li>📍 42 Blossom Boulevard, Colombo 07</li>
+                    <li>📞 +94 11 234 5678</li>
+                    <li>✉️ hello@sweetbloompatisserie.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom-bar">
+            <p>&copy; 2026 Sweet Bloom Patisserie. All Rights Reserved. University Web Application Project.</p>
+        </div>
+    </footer>
+
+    <!-- Account Interaction Scripts -->
+    <script>
+        let currentCustomer = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initAccountPage();
+
+            // Handle hash routing e.g. account.html#orders
+            if (window.location.hash) {
+                const target = window.location.hash.replace('#', '');
+                if (target === 'orders') switchAccountTab('tabOrders');
+                else if (target === 'deliveries') switchAccountTab('tabDeliveries');
+                else if (target === 'bookings') switchAccountTab('tabBookings');
+                else if (target === 'profile') switchAccountTab('tabProfile');
+            }
+        });
+
+        async function initAccountPage() {
+            try {
+                const res = await fetch('/api/site/auth/me');
+                const data = await res.json();
+
+                if (!data || !data.authenticated) {
+                    window.location.href = 'login.html?returnUrl=' + encodeURIComponent(window.location.pathname);
+                    return;
+                }
+
+                if (data.role === 'ADMIN') {
+                    window.location.href = 'admin.html';
+                    return;
+                }
+
+                currentCustomer = data;
+                renderProfileUI(data);
+                loadCustomerOrders();
+                loadCustomerBookings();
+            } catch (err) {
+                console.error('Error initializing account page:', err);
+            }
+        }
+
+        function renderProfileUI(user) {
+            const titleEl = document.getElementById('accountWelcomeTitle');
+            const sideName = document.getElementById('sidebarFullName');
+            const avatarInitial = document.getElementById('avatarInitial');
+            const navName = document.getElementById('navProfileName');
+
+            const firstName = (user.fullName || 'Customer').split(' ')[0];
+            if (titleEl) titleEl.textContent = `Welcome, ${firstName}!`;
+            if (sideName) sideName.textContent = user.fullName || 'Customer';
+            if (navName) navName.textContent = firstName;
+            if (avatarInitial) avatarInitial.textContent = (user.fullName || 'C').charAt(0).toUpperCase();
+
+            // Form inputs
+            const nameInput = document.getElementById('profileFullName');
+            const emailInput = document.getElementById('profileEmail');
+            const phoneInput = document.getElementById('profilePhone');
+            const addrInput = document.getElementById('profileAddress');
+
+            if (nameInput) nameInput.value = user.fullName || '';
+            if (emailInput) emailInput.value = user.email || '';
+            if (phoneInput) phoneInput.value = user.phone || '';
+            if (addrInput) addrInput.value = user.address || '';
+        }
+
+        function switchAccountTab(tabId) {
+            document.querySelectorAll('.account-content-card').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.account-nav-btn').forEach(b => b.classList.remove('active'));
+
+            const targetCard = document.getElementById(tabId);
+            const targetBtn = document.querySelector(`.account-nav-btn[data-tab="${tabId}"]`);
+
+            if (targetCard) targetCard.classList.add('active');
+            if (targetBtn) targetBtn.classList.add('active');
+
+            if (history.replaceState) {
+                const hash = tabId.replace('tab', '').toLowerCase();
+                history.replaceState(null, null, '#' + hash);
+            }
+        }
+
+        async function handleProfileUpdate(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSaveProfile');
+            if (btn) btn.disabled = true;
+
+            const payload = {
+                fullName: document.getElementById('profileFullName').value,
+                phone: document.getElementById('profilePhone').value,
+                address: document.getElementById('profileAddress').value
+            };
+
+            try {
+                const res = await fetch('/api/site/account/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showAccountToast('Profile updated successfully!', '✅');
+                    currentCustomer.fullName = payload.fullName;
+                    currentCustomer.phone = payload.phone;
+                    currentCustomer.address = payload.address;
+                    renderProfileUI(currentCustomer);
+                } else {
+                    showAccountToast(data.message || 'Error updating profile', '⚠️');
+                }
+            } catch (err) {
+                showAccountToast('Network error updating profile', '❌');
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        async function loadCustomerOrders() {
+            const container = document.getElementById('ordersListContainer');
+            const delivContainer = document.getElementById('deliveriesListContainer');
+
+            try {
+                const res = await fetch('/api/site/account/orders');
+                const orders = await res.json();
+
+                if (!orders || orders.length === 0) {
+                    const emptyHtml = `
+                        <div class="empty-records-card">
+                            <span class="empty-icon">🥖</span>
+                            <h3 class="empty-title">No Orders Placed Yet</h3>
+                            <p class="empty-desc">Discover our fresh croissants, donuts, patties, and buns.</p>
+                            <a href="bakery.html" class="btn-save-profile" style="text-decoration:none;">Browse Daily Bakery Menu</a>
+                        </div>
+                    `;
+                    if (container) container.innerHTML = emptyHtml;
+                    if (delivContainer) delivContainer.innerHTML = `
+                        <div class="empty-records-card">
+                            <span class="empty-icon">🚚</span>
+                            <h3 class="empty-title">No Deliveries Found</h3>
+                            <p class="empty-desc">When you place an order with delivery, tracking steps will appear here.</p>
+                            <a href="bakery.html" class="btn-save-profile" style="text-decoration:none;">Start an Order</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Render My Orders
+                container.innerHTML = orders.map(o => renderOrderCard(o)).join('');
+
+                // Render My Deliveries
+                const deliveryOrders = orders.filter(o => (o.deliveryAddress && !o.deliveryAddress.toLowerCase().includes('pickup')) || o.deliveryAddress === '');
+                if (deliveryOrders.length === 0) {
+                    delivContainer.innerHTML = orders.map(o => renderDeliveryCard(o)).join('');
+                } else {
+                    delivContainer.innerHTML = deliveryOrders.map(o => renderDeliveryCard(o)).join('');
+                }
+            } catch (err) {
+                if (container) container.innerHTML = `<p style="color:red;">Error loading orders.</p>`;
+            }
+        }
+
+        function renderOrderCard(order) {
+            const statusClass = 'status-' + (order.status || 'pending').toLowerCase();
+            const items = (order.itemsSummary || '').split(';').map(itemStr => {
+                const parts = itemStr.split(':');
+                if (parts.length >= 3) {
+                    return `<div>• <strong>${parts[1]}</strong> × ${parts[2]} (Rs. ${parseFloat(parts[3] || 0).toLocaleString()})</div>`;
+                }
+                return `<div>• ${itemStr}</div>`;
+            }).join('');
+
+            return `
+                <div class="record-card">
+                    <div class="record-card-top">
+                        <div class="record-id-wrap">
+                            <span class="record-id">${order.orderId}</span>
+                            <span class="record-date">• ${order.orderDate}</span>
+                        </div>
+                        <span class="status-pill ${statusClass}">${order.status || 'Pending'}</span>
+                    </div>
+
+                    <div style="margin: 0.75rem 0; font-size: 0.9rem; line-height: 1.5;">
+                        <span class="detail-item-label">Items Ordered</span>
+                        ${items}
+                    </div>
+
+                    <div class="record-details-grid">
+                        <div>
+                            <span class="detail-item-label">Delivery / Pickup</span>
+                            <span class="detail-item-val">${order.deliveryAddress || 'Bakery Pickup'}</span>
+                        </div>
+                        <div>
+                            <span class="detail-item-label">Recipient Phone</span>
+                            <span class="detail-item-val">${order.customerPhone || 'N/A'}</span>
+                        </div>
+                        <div>
+                            <span class="detail-item-label">Payment Status</span>
+                            <span class="detail-item-val"><span class="status-pill" style="background:#FFF3E0; color:#E65100; border:1px solid #FFE0B2; font-weight:700;">${order.paymentStatus || (order.paymentMethod === 'PAY_AFTER_DELIVERY' ? 'PENDING' : 'PENDING')}</span></span>
+                        </div>
+                        <div>
+                            <span class="detail-item-label">Total Amount</span>
+                            <span class="record-price-highlight">Rs. ${parseFloat(order.totalAmount || 0).toLocaleString()}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDeliveryCard(order) {
+            const statusClass = 'status-' + (order.status || 'pending').toLowerCase();
+            const st = (order.status || 'Pending').toLowerCase();
+
+            // Progress steps
+            const isConfirmed = ['confirmed', 'preparing', 'ready', 'delivered'].includes(st);
+            const isPreparing = ['preparing', 'ready', 'delivered'].includes(st);
+            const isReady = ['ready', 'delivered'].includes(st);
+            const isDelivered = ['delivered', 'completed'].includes(st);
+
+            return `
+                <div class="record-card">
+                    <div class="record-card-top">
+                        <div class="record-id-wrap">
+                            <span class="record-id">${order.orderId}</span>
+                            <span class="record-date">• ${order.orderDate}</span>
+                        </div>
+                        <span class="status-pill ${statusClass}">${order.status || 'Pending'}</span>
+                    </div>
+
+                    <div class="record-details-grid" style="border:none; padding:0; margin-bottom:1rem;">
+                        <div>
+                            <span class="detail-item-label">Destination Address</span>
+                            <span class="detail-item-val">📍 ${order.deliveryAddress || 'Bakery Pickup'}</span>
+                        </div>
+                        <div>
+                            <span class="detail-item-label">Recipient Contact</span>
+                            <span class="detail-item-val">📞 ${order.customerPhone || 'N/A'}</span>
+                        </div>
+                        <div>
+                            <span class="detail-item-label">Payment Status</span>
+                            <span class="detail-item-val"><span class="status-pill" style="background:#FFF3E0; color:#E65100; border:1px solid #FFE0B2; font-weight:700;">${order.paymentStatus || (order.paymentMethod === 'PAY_AFTER_DELIVERY' ? 'PENDING' : 'PENDING')}</span></span>
+                        </div>
+                        <div>
+                            <span class="detail-item-label">Total Payment</span>
+                            <span class="detail-item-val">Rs. ${parseFloat(order.totalAmount || 0).toLocaleString()}</span>
+                        </div>
+                    </div>
+
+                    <!-- Progress Stepper -->
+                    <div class="delivery-stepper-wrap">
+                        <div class="delivery-stepper">
+                            <div class="stepper-step completed">
+                                <div class="stepper-circle">✓</div>
+                                <span class="stepper-label">Placed</span>
+                            </div>
+                            <div class="stepper-step ${isConfirmed ? (isPreparing ? 'completed' : 'active') : ''}">
+                                <div class="stepper-circle">${isPreparing ? '✓' : '2'}</div>
+                                <span class="stepper-label">Confirmed</span>
+                            </div>
+                            <div class="stepper-step ${isPreparing ? (isReady ? 'completed' : 'active') : ''}">
+                                <div class="stepper-circle">${isReady ? '✓' : '3'}</div>
+                                <span class="stepper-label">Preparing</span>
+                            </div>
+                            <div class="stepper-step ${isReady ? (isDelivered ? 'completed' : 'active') : ''}">
+                                <div class="stepper-circle">${isDelivered ? '✓' : '4'}</div>
+                                <span class="stepper-label">Ready</span>
+                            </div>
+                            <div class="stepper-step ${isDelivered ? 'completed' : ''}">
+                                <div class="stepper-circle">${isDelivered ? '✓' : '5'}</div>
+                                <span class="stepper-label">Delivered</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadCustomerBookings() {
+            const container = document.getElementById('bookingsListContainer');
+            try {
+                const res = await fetch('/api/site/account/bookings');
+                const bookings = await res.json();
+
+                if (!bookings || bookings.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-records-card">
+                            <span class="empty-icon">🎂</span>
+                            <h3 class="empty-title">No Custom Cake Bookings</h3>
+                            <p class="empty-desc">Create your dream cake with our interactive 3D visual builder.</p>
+                            <a href="custom-cake.html" class="btn-save-profile" style="text-decoration:none;">Book a Custom Cake Now</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = bookings.map(b => renderBookingCard(b)).join('');
+            } catch (err) {
+                if (container) container.innerHTML = `<p style="color:red;">Error loading bookings.</p>`;
+            }
+        }
+
+        function renderBookingCard(b) {
+            const statusClass = 'status-' + (b.status || 'pending').toLowerCase();
+            return `
+                <div class="record-card">
+                    <div class="record-card-top">
+                        <div class="record-id-wrap">
+                            <span class="record-id">${b.bookingId}</span>
+                            <span class="record-date">• For ${b.requiredDate || 'TBD'}</span>
+                        </div>
+                        <span class="status-pill ${statusClass}">${b.status || 'Pending'}</span>
+                    </div>
+
+                    <div style="margin: 0.75rem 0; font-size: 0.95rem;">
+                        <strong>Occasion:</strong> ${b.occasion || 'Celebration'} | 
+                        <strong>Size:</strong> ${b.size || b.cakeSize || 'Medium'} | 
+                        <strong>Flavor:</strong> ${b.flavor || 'Vanilla'}
+                    </div>
+
+                    <div style="background:#FFF9F4; border:1px dashed #EADBCE; border-radius:12px; padding:0.75rem 1rem; margin-bottom:0.85rem; font-size:0.88rem;">
+                        <span class="detail-item-label">Cake Inscription</span>
+                        <em>"${b.cakeMessage || 'No message requested'}"</em>
+                    </div>
+
+                    <div class="record-details-grid">
+                        <div>
+                            <span class="detail-item-label">Decoration & Theme</span>
+                            <span class="detail-item-val">${b.decoration || b.theme || 'Floral Elegance'}</span>
+                        </div>
+                        <div>
+                            <span class="detail-item-label">Fulfillment</span>
+                            <span class="detail-item-val">${b.deliveryOption || b.pickupOrDelivery || 'Pickup'}</span>
+                        </div>
+                        <div>
+                            <span class="detail-item-label">Estimated Price</span>
+                            <span class="record-price-highlight">Rs. ${parseFloat(b.price || b.estimatedPrice || 0).toLocaleString()}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function handleLogout() {
+            try {
+                await fetch('/api/site/auth/logout', { method: 'POST' });
+            } catch (e) {}
+            window.location.href = 'login.html?logout=true';
+        }
+
+        let toastTimer = null;
+        function showAccountToast(msg, icon = '✨') {
+            const toast = document.getElementById('accountToast');
+            const iconEl = document.getElementById('accountToastIcon');
+            const msgEl = document.getElementById('accountToastMsg');
+            if (!toast) return;
+
+            if (iconEl) iconEl.textContent = icon;
+            if (msgEl) msgEl.textContent = msg;
+
+            toast.classList.add('show');
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+    <!-- Main JS -->
+    <script src="js/main.js"></script>
+</body>
+</html>

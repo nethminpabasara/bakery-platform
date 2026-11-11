@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order &amp; Booking Management | Sweet Bloom Patisserie</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📋</text></svg>">
+    <style>
+        .mgmt-header {
+            padding: 7.5rem 1.5rem 2.5rem 1.5rem;
+            background: linear-gradient(180deg, var(--color-cream-dark) 0%, var(--color-cream) 100%);
+            text-align: center;
+        }
+        .mgmt-container {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 1.5rem 1.5rem 6rem 1.5rem;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .stat-card {
+            background: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+        .stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            background: var(--color-cream-dark);
+        }
+        .stat-num {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--color-dark-roast);
+            line-height: 1.1;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--color-dark-muted);
+            font-weight: 600;
+        }
+        .tabs-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 2px solid var(--color-cream-dark);
+            margin-bottom: 2rem;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.85rem 1.5rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--color-dark-muted);
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition-fast);
+        }
+        .tab-btn:hover { color: var(--color-dark-roast); }
+        .tab-btn.active {
+            color: var(--color-strawberry);
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--color-strawberry);
+            border-radius: 3px 3px 0 0;
+        }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            background: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+        }
+        .mgmt-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.92rem;
+        }
+        .mgmt-table th {
+            background: var(--color-cream-subtle);
+            padding: 1.1rem 1.25rem;
+            font-weight: 700;
+            color: var(--color-dark-roast);
+            border-bottom: 1.5px solid var(--color-border);
+            white-space: nowrap;
+        }
+        .mgmt-table td {
+            padding: 1.1rem 1.25rem;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-dark-roast);
+            vertical-align: middle;
+        }
+        .mgmt-table tr:hover td {
+            background-color: #FFFDF9;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .badge-pending { background: #FFF4E5; color: #B25E09; border: 1px solid #FFE2B8; }
+        .badge-confirmed { background: #E6F4EA; color: #137333; border: 1px solid #CEEAD6; }
+        .badge-preparing { background: #FCE8E6; color: #C5221F; border: 1px solid #FAD2CF; }
+        .badge-delivered, .badge-ready { background: #E8F0FE; color: #1A73E8; border: 1px solid #D2E3FC; }
+        .badge-cancelled { background: #F1F3F4; color: #5F6368; border: 1px solid #DADCE0; }
+        .action-btn-group {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .btn-action {
+            padding: 0.4rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--color-border);
+            background: var(--color-cream-subtle);
+            color: var(--color-dark-roast);
+            transition: var(--transition-fast);
+        }
+        .btn-action:hover {
+            background: var(--color-cream-dark);
+        }
+        .btn-action-view:hover {
+            background: var(--color-gold-light);
+            border-color: var(--color-gold);
+            color: var(--color-caramel);
+        }
+        .btn-action-edit:hover {
+            background: #E8F0FE;
+            border-color: #1A73E8;
+            color: #1A73E8;
+        }
+        .btn-action-del:hover {
+            background: var(--color-strawberry-light);
+            border-color: var(--color-strawberry);
+            color: var(--color-strawberry);
+        }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .modal-card {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 580px;
+            box-shadow: var(--shadow-hover);
+            overflow: hidden;
+            animation: modalPop 0.25s ease-out;
+        }
+        @keyframes modalPop {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            background: var(--color-cream-subtle);
+            border-bottom: 1.5px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-body {
+            padding: 1.75rem 1.5rem;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            background: var(--color-cream-subtle);
+            border-top: 1.5px solid var(--color-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+    </style>
+  <script src="/js/site-images.js"></script>
+</head>
+<body>
+
+    <!-- Main Navigation -->
+    <nav class="navbar" id="mainNavbar">
+        <div class="navbar-container">
+            <a href="index.html" class="brand-logo">
+                <span class="brand-icon">🧁</span>
+                <span>Sweet Bloom <em>Patisserie</em></span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="bakery.html" class="nav-link">Daily Bakery</a></li>
+                <li><a href="custom-cake.html#custom-cake-builder" class="nav-link">Book Cake</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <!-- Profile Button / Dropdown -->
+                <div class="nav-profile-wrapper" id="navProfileWrapper">
+                    <a href="login.html" class="btn-profile-nav" id="navProfileBtn" title="Account">
+                        <span class="profile-nav-icon">👤</span>
+                        <span class="profile-nav-name">Sign In</span>
+                    </a>
+                </div>
+
+                <a href="bakery.html" class="btn-pill btn-gold">
+                    🥖 New Order
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="mgmt-header">
+        <span class="section-eyebrow">Customer Account Dashboard</span>
+        <h1 class="section-title">My Orders &amp; Bookings</h1>
+        <p class="section-subtitle">
+            Track, review, and manage your personalized bakery orders and custom cake reservations.
+        </p>
+    </header>
+
+    <!-- Content -->
+    <main class="mgmt-container">
+        
+        <div id="flashMsgContainer"></div>
+
+        <!-- Metric Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#FDF4E7; color:#C88D44;">🥖</div>
+                <div>
+                    <div class="stat-num" id="statOrdersCount">0</div>
+                    <div class="stat-label">Daily Bakery Orders</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#FEECEF; color:#C92C3D;">🎂</div>
+                <div>
+                    <div class="stat-num" id="statCakesCount">0</div>
+                    <div class="stat-label">Custom Cake Bookings</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#E6F4EA; color:#137333;">💵</div>
+                <div>
+                    <div class="stat-num" id="statTotalRev">Rs. 0.00</div>
+                    <div class="stat-label">Total Active Revenue</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#E8F0FE; color:#1A73E8;">👤</div>
+                <div>
+                    <div class="stat-num" id="statCustomerRole">Customer</div>
+                    <div class="stat-label">Verified Account</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tabs-header">
+            <button type="button" class="tab-btn active" id="tabBakeryBtn" onclick="switchTab('bakery')">
+                🥖 Daily Bakery Orders (<span id="tabOrdersNum">0</span>)
+            </button>
+            <button type="button" class="tab-btn" id="tabCakeBtn" onclick="switchTab('cake')">
+                🎂 Custom Cake Bookings (<span id="tabCakesNum">0</span>)
+            </button>
+            <button type="button" class="tab-btn" id="tabInvoicesBtn" onclick="switchTab('invoices')">
+                📄 My Invoices (<span id="tabInvoicesNum">0</span>)
+            </button>
+            <button type="button" class="tab-btn" id="tabRefundsBtn" onclick="switchTab('refunds')">
+                🔄 Refund Requests (<span id="tabRefundsNum">0</span>)
+            </button>
+            <button type="button" class="tab-btn" id="tabDesignsBtn" onclick="switchTab('designs')">
+                🎨 My Saved Cake Designs (<span id="tabDesignsNum">0</span>)
+            </button>
+        </div>
+
+        <!-- Tab 1: Bakery Orders Table -->
+        <div id="tabBakeryContent">
+            <div class="table-responsive">
+                <table class="mgmt-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer Name</th>
+                            <th>Phone / Contact</th>
+                            <th>Items &amp; Details</th>
+                            <th>Date</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Payment Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bakeryOrdersTbody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 2: Custom Cake Bookings Table -->
+        <div id="tabCakeContent" style="display:none;">
+            <div class="table-responsive">
+                <table class="mgmt-table">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Customer Name</th>
+                            <th>Occasion</th>
+                            <th>Size &amp; Flavor</th>
+                            <th>Required Date</th>
+                            <th>Fulfillment</th>
+                            <th>Estimate</th>
+                            <th>Status</th>
+                            <th>Payment Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cakeBookingsTbody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 3: My Invoices Table -->
+        <div id="tabInvoicesContent" style="display:none;">
+            <div class="table-responsive">
+                <table class="mgmt-table">
+                    <thead>
+                        <tr>
+                            <th>Invoice #</th>
+                            <th>Order ID</th>
+                            <th>Billing Customer</th>
+                            <th>Date</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerInvoicesTbody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 4: Refund Requests Table -->
+        <div id="tabRefundsContent" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+                <p style="margin:0; font-size:0.92rem; color:var(--color-dark-muted);">View status of submitted refund claims or submit a new request for an eligible order.</p>
+                <button type="button" class="btn-pill btn-strawberry" onclick="openNewRefundModal()" style="font-size:0.88rem; padding:0.6rem 1.25rem;">
+                    🔄 Submit Refund Request
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="mgmt-table">
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Order ID</th>
+                            <th>Requested Amount</th>
+                            <th>Reason</th>
+                            <th>Date Submitted</th>
+                            <th>Status</th>
+                            <th>Admin Response</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerRefundsTbody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 5: My Saved Cake Designs Table -->
+        <div id="tabDesignsContent" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+                <p style="margin:0; font-size:0.92rem; color:var(--color-dark-muted);">View, customize, or book your saved custom cake designs.</p>
+                <a href="custom-cake.html" class="btn-pill btn-strawberry" style="font-size:0.88rem; padding:0.6rem 1.25rem; text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem;">
+                    ✨ Create New Design
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="mgmt-table">
+                    <thead>
+                        <tr>
+                            <th>Design #</th>
+                            <th>Reference Image</th>
+                            <th>Shape &amp; Flavor</th>
+                            <th>Decoration &amp; Filling</th>
+                            <th>Piped Message</th>
+                            <th>Estimate</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="savedDesignsTbody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Edit Cake Design Modal -->
+    <div class="modal-overlay" id="editDesignModal" onclick="closeModalOnOuter(event, 'editDesignModal')">
+        <div class="modal-card">
+            <form onsubmit="handleEditDesignSubmit(event)">
+                <input type="hidden" id="editDesignId">
+                <div class="modal-header">
+                    <h3 style="font-family:var(--font-heading); font-size:1.3rem;">Edit Saved Cake Design</h3>
+                    <button type="button" onclick="closeModal('editDesignModal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Shape</label>
+                        <select id="editDesignShape" class="form-select">
+                            <option value="Round">Round</option>
+                            <option value="Square">Square</option>
+                            <option value="Heart">Heart</option>
+                            <option value="Tiered">Tiered</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Flavour</label>
+                        <select id="editDesignFlavor" class="form-select">
+                            <option value="Vanilla">Vanilla</option>
+                            <option value="Chocolate">Chocolate</option>
+                            <option value="Red Velvet">Red Velvet</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Decoration</label>
+                        <select id="editDesignDecoration" class="form-select">
+                            <option value="Strawberry">Strawberry</option>
+                            <option value="Floral">Floral</option>
+                            <option value="Chocolate Drip">Chocolate Drip</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Filling</label>
+                        <select id="editDesignFilling" class="form-select">
+                            <option value="Vanilla Cream">Vanilla Cream</option>
+                            <option value="Chocolate Cream">Chocolate Cream</option>
+                            <option value="Strawberry Filling">Strawberry Filling</option>
+                            <option value="Buttercream">Buttercream</option>
+                            <option value="Chocolate Ganache">Chocolate Ganache</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Piped Cake Message</label>
+                        <input type="text" id="editDesignMessage" class="form-input" placeholder="Happy Birthday..." maxlength="50">
+                    </div>
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Estimated Price (Rs.)</label>
+                        <input type="number" id="editDesignPrice" class="form-input" min="0" step="100">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-pill btn-outline" onclick="closeModal('editDesignModal')">Cancel</button>
+                    <button type="submit" class="btn-pill btn-strawberry">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Modal -->
+    <div class="modal-overlay" id="viewDetailsModal" onclick="closeModalOnOuter(event, 'viewDetailsModal')">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 style="font-family:var(--font-heading); font-size:1.3rem;" id="viewModalTitle">Record Details</h3>
+                <button type="button" onclick="closeModal('viewDetailsModal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <div class="modal-body" id="viewModalBody"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn-pill btn-outline" onclick="closeModal('viewDetailsModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Order Modal -->
+    <div class="modal-overlay" id="editOrderModal" onclick="closeModalOnOuter(event, 'editOrderModal')">
+        <div class="modal-card">
+            <form onsubmit="handleEditOrderSubmit(event)">
+                <input type="hidden" id="editOrderId">
+                <div class="modal-header">
+                    <h3 style="font-family:var(--font-heading); font-size:1.3rem;">Edit Bakery Order</h3>
+                    <button type="button" onclick="closeModal('editOrderModal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Order Status</label>
+                        <select id="editOrderStatus" class="form-select">
+                            <option value="Pending">Pending</option>
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="Preparing">Preparing</option>
+                            <option value="Delivered">Delivered</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Customer Name</label>
+                        <input type="text" id="editOrderCustomerName" class="form-input">
+                    </div>
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Contact Phone</label>
+                        <input type="text" id="editOrderPhone" class="form-input">
+                    </div>
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Delivery Address / Counter</label>
+                        <input type="text" id="editOrderAddress" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Special Notes</label>
+                        <input type="text" id="editOrderNotes" class="form-input">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-pill btn-outline" onclick="closeModal('editOrderModal')">Cancel</button>
+                    <button type="submit" class="btn-pill btn-strawberry">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Cake Modal -->
+    <div class="modal-overlay" id="editCakeModal" onclick="closeModalOnOuter(event, 'editCakeModal')">
+        <div class="modal-card">
+            <form onsubmit="handleEditCakeSubmit(event)">
+                <input type="hidden" id="editCakeBookingId">
+                <div class="modal-header">
+                    <h3 style="font-family:var(--font-heading); font-size:1.3rem;">Edit Custom Cake Booking</h3>
+                    <button type="button" onclick="closeModal('editCakeModal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Booking Status</label>
+                        <select id="editCakeStatus" class="form-select">
+                            <option value="Pending">Pending</option>
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="Preparing">Preparing</option>
+                            <option value="Ready">Ready for Pickup / Delivery</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Customer Name</label>
+                        <input type="text" id="editCakeCustomerName" class="form-input">
+                    </div>
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Contact Number</label>
+                        <input type="text" id="editCakePhone" class="form-input">
+                    </div>
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Required Date</label>
+                        <input type="date" id="editCakeDate" class="form-input">
+                    </div>
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Estimated Price (Rs.)</label>
+                        <input type="number" step="0.01" id="editCakePrice" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Decorator Notes</label>
+                        <input type="text" id="editCakeNotes" class="form-input">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-pill btn-outline" onclick="closeModal('editCakeModal')">Cancel</button>
+                    <button type="submit" class="btn-pill btn-strawberry">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Customer Invoice Detail & Print Modal -->
+    <div class="modal-overlay" id="customerInvoiceModal" onclick="closeModalOnOuter(event, 'customerInvoiceModal')">
+        <div class="modal-card" style="max-width: 680px; max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <span style="font-size:1.3rem;">📄</span>
+                    <h3 style="font-family:var(--font-heading); font-size:1.25rem; margin:0;" id="custInvTitle">Official Invoice</h3>
+                </div>
+                <button type="button" onclick="closeModal('customerInvoiceModal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <div class="modal-body" id="customerPrintableArea" style="flex:1; overflow-y:auto; padding:1.5rem;">
+                <div style="display:flex; justify-content:space-between; border-bottom:2px dashed var(--color-border); padding-bottom:1rem; margin-bottom:1.25rem;">
+                    <div>
+                        <h2 style="margin:0 0 0.25rem 0; color:var(--color-strawberry); font-family:var(--font-heading);">Sweet Bloom Patisserie</h2>
+                        <p style="margin:0; font-size:0.82rem; color:var(--color-dark-muted);">123 Gourmet Lane, Colombo, Sri Lanka</p>
+                        <p style="margin:0; font-size:0.82rem; color:var(--color-dark-muted);">contact@sweetbloom.com | +94 11 234 5678</p>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="badge badge-confirmed" id="custInvBadge" style="display:inline-block; margin-bottom:0.35rem;">PAID</span>
+                        <div style="font-weight:700; font-size:1.1rem; color:var(--color-dark-roast);" id="custInvNumber">INV-1001</div>
+                        <div style="font-size:0.82rem; color:var(--color-dark-muted);" id="custInvDate">Date: 2026-10-23</div>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem; background:var(--color-cream-subtle); padding:1rem; border-radius:10px;">
+                    <div>
+                        <strong style="display:block; font-size:0.75rem; text-transform:uppercase; color:var(--color-dark-muted); margin-bottom:0.3rem;">Billed To:</strong>
+                        <div style="font-weight:700; color:var(--color-dark-roast);" id="custInvCustomer">Customer Name</div>
+                        <div style="font-size:0.85rem; color:var(--color-dark-muted);" id="custInvEmail">customer@example.com</div>
+                        <div style="font-size:0.85rem; color:var(--color-dark-muted);" id="custInvPhone">+94 77 123 4567</div>
+                        <div style="font-size:0.85rem; color:var(--color-dark-muted); margin-top:0.35rem;" id="custInvAddress">123 Street, City</div>
+                    </div>
+                    <div>
+                        <strong style="display:block; font-size:0.75rem; text-transform:uppercase; color:var(--color-dark-muted); margin-bottom:0.3rem;">Order Details:</strong>
+                        <div style="font-size:0.88rem; color:var(--color-dark-roast);">Order ID: <strong id="custInvOrderId">ORD-1001</strong></div>
+                        <div style="font-size:0.85rem; color:var(--color-dark-muted); margin-top:0.25rem;">Status: <strong id="custInvOrderStatus">PAID</strong></div>
+                        <div style="font-size:0.85rem; color:var(--color-dark-muted); margin-top:0.25rem;">Notes: <span id="custInvNotes">-</span></div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:1.25rem;">
+                    <strong style="display:block; font-size:0.85rem; color:var(--color-dark-roast); margin-bottom:0.5rem;">Purchased Items:</strong>
+                    <div id="custInvItems" style="border:1px solid var(--color-border); border-radius:8px; overflow:hidden; background:#fff;"></div>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; border-top:2px solid var(--color-border); padding-top:0.75rem;">
+                    <div style="text-align:right;">
+                        <span style="font-size:0.95rem; color:var(--color-dark-muted); margin-right:1rem;">Total Amount Paid:</span>
+                        <strong style="font-size:1.35rem; color:var(--color-strawberry);" id="custInvTotal">Rs. 0.00</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+                <button type="button" class="btn-pill btn-gold" onclick="printCustomerInvoice()" style="font-size:0.88rem; padding:0.55rem 1.25rem;">
+                    🖨️ Print Invoice
+                </button>
+                <button type="button" class="btn-pill btn-outline" onclick="closeModal('customerInvoiceModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Refund Request Modal -->
+    <div class="modal-overlay" id="customerRefundModal" onclick="closeModalOnOuter(event, 'customerRefundModal')">
+        <div class="modal-card" style="max-width: 520px;">
+            <form onsubmit="handleCustomerRefundSubmit(event)">
+                <input type="hidden" id="custRefundEditId">
+                <div class="modal-header">
+                    <h3 style="font-family:var(--font-heading); font-size:1.3rem;" id="custRefundModalTitle">Submit Refund Request</h3>
+                    <button type="button" onclick="closeModal('customerRefundModal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Order ID *</label>
+                        <input type="text" id="custRefundOrderId" class="form-input" required placeholder="e.g. ORD-1001">
+                        <small style="color:var(--color-dark-muted); font-size:0.75rem;">Must reference an existing order placed on Sweet Bloom Patisserie.</small>
+                    </div>
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label class="form-label">Refund Amount (Rs.) *</label>
+                        <input type="number" step="0.01" min="0.01" id="custRefundAmount" class="form-input" required placeholder="e.g. 1500.00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Reason for Refund *</label>
+                        <textarea id="custRefundReason" rows="3" class="form-input" required placeholder="Please explain the reason for your refund request in detail..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-pill btn-outline" onclick="closeModal('customerRefundModal')">Cancel</button>
+                    <button type="submit" class="btn-pill btn-strawberry" id="custRefundSubmitBtn">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>🧁 Sweet Bloom Patisserie</h3>
+                <p>University Software Engineering Project: Java Servlet &amp; JSP Bakery Platform.</p>
+            </div>
+            <div>
+                <h4 class="footer-title">Pages</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="bakery.html">Daily Bakery Ordering</a></li>
+                    <li><a href="custom-cake.html">Custom Cake Booking</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">Persistence</h4>
+                <p style="font-size:0.88rem; color:#DACBC2; line-height:1.5;">All edits and cancellations synchronize directly into orders.txt and cakeBookings.txt in UTF-8.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        let sampleOrders = [];
+        let sampleBookings = [];
+
+        async function fetchRealData() {
+            try {
+                const [ordersRes, bookingsRes] = await Promise.all([
+                    fetch('/api/site/orders/my'),
+                    fetch('/api/site/bookings/my')
+                ]);
+                if (ordersRes.ok) {
+                    const data = await ordersRes.json();
+                    sampleOrders = (Array.isArray(data) ? data : []).map(o => ({
+                        orderId: o.orderId,
+                        customerName: o.customerName,
+                        customerPhone: o.customerPhone || o.phone,
+                        customerEmail: o.customerEmail || o.email,
+                        deliveryAddress: o.deliveryAddress,
+                        orderDate: (o.orderDate || '').replace('T', ' ').substring(0, 16),
+                        status: o.status,
+                        paymentStatus: o.paymentStatus || (o.paymentMethod === 'PAY_AFTER_DELIVERY' ? 'PENDING' : 'PAID'),
+                        items: o.itemsSummaryDisplay || (o.items ? o.items.map(i => (i.quantity || 1) + 'x ' + (i.productName || i.name || 'Item') + (i.selectedSize ? ' (' + i.selectedSize + ')' : '')).join(', ') : 'Order items'),
+                        totalAmount: o.totalAmount || o.total || 0,
+                        notes: o.notes || ''
+                    }));
+                } else {
+                    sampleOrders = [];
+                }
+                if (bookingsRes.ok) {
+                    const bData = await bookingsRes.json();
+                    sampleBookings = (Array.isArray(bData) ? bData : []).map(b => ({
+                        bookingId: b.bookingId,
+                        customerName: b.customerName,
+                        contactNumber: b.contactNumber || b.phone,
+                        email: b.email,
+                        occasion: b.occasion,
+                        cakeSize: b.cakeSize || b.size,
+                        servings: b.servings,
+                        flavor: b.flavor,
+                        theme: b.theme || b.colorTheme,
+                        preferredColors: b.preferredColors || '',
+                        cakeMessage: b.cakeMessage,
+                        requiredDate: b.requiredDate,
+                        pickupOrDelivery: b.pickupOrDelivery || b.deliveryOption,
+                        notes: b.notes || b.instructions,
+                        estimatedPrice: b.estimatedPrice || b.price || 0,
+                        status: b.status,
+                        paymentStatus: b.paymentStatus || 'Pay After Delivery'
+                    }));
+                } else {
+                    sampleBookings = [];
+                }
+            } catch (e) {
+                console.error('Error fetching data:', e);
+                sampleOrders = [];
+                sampleBookings = [];
+            }
+            renderOrdersTable();
+            renderCakesTable();
+        }
+
+        function getBadge(status) {
+            const st = (status || '').toLowerCase();
+            let cls = 'badge-pending';
+            if (st.includes('confirm')) cls = 'badge-confirmed';
+            else if (st.includes('prepar')) cls = 'badge-preparing';
+            else if (st.includes('deliver') || st.includes('ready')) cls = 'badge-delivered';
+            else if (st.includes('cancel')) cls = 'badge-cancelled';
+            return `<span class="badge ${cls}">${status}</span>`;
+        }
+
+        function renderOrdersTable() {
+            const tbody = document.getElementById('bakeryOrdersTbody');
+            document.getElementById('statOrdersCount').textContent = sampleOrders.length;
+            document.getElementById('tabOrdersNum').textContent = sampleOrders.length;
+
+            if (sampleOrders.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" style="text-align:center; padding:3.5rem 1.5rem; color:#8D7A6E;">
+                            <div style="font-size:2.5rem; margin-bottom:0.75rem;">📦</div>
+                            <h3 style="font-size:1.15rem; font-weight:700; color:var(--color-dark-roast); margin:0 0 0.5rem 0;">No orders yet.</h3>
+                            <p style="margin:0 0 1.25rem 0; font-size:0.9rem; color:var(--color-dark-muted);">Discover our fresh croissants, donuts, patties, and savory bakery items.</p>
+                            <a href="bakery.html" class="btn-pill btn-strawberry" style="text-decoration:none; display:inline-block; font-size:0.88rem; padding:0.6rem 1.35rem;">Browse Bakery Menu</a>
+                        </td>
+                    </tr>`;
+                calcTotals();
+                return;
+            }
+
+            tbody.innerHTML = sampleOrders.map(o => `
+                <tr>
+                    <td><strong>${o.orderId}</strong></td>
+                    <td>${o.customerName}</td>
+                    <td>${o.customerPhone}</td>
+                    <td><span>${o.items}</span></td>
+                    <td>${o.orderDate}</td>
+                    <td style="font-weight:700; color:var(--color-strawberry);">Rs. ${(parseFloat(o.totalAmount) || 0).toLocaleString()}</td>
+                    <td>${getBadge(o.status)}</td>
+                    <td><span class="badge" style="background:#FFF3E0; color:#E65100; border:1px solid #FFE0B2; font-weight:700;">${o.paymentStatus || 'PENDING'}</span></td>
+                    <td>
+                        <div class="action-btn-group">
+                            <button type="button" class="btn-action btn-action-view" onclick="viewOrderDetails('${o.orderId}')">View</button>
+                            <button type="button" class="btn-action btn-action-edit" onclick="editOrder('${o.orderId}')">Edit</button>
+                            <button type="button" class="btn-action btn-action-del" onclick="deleteOrder('${o.orderId}')">Cancel</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            calcTotals();
+        }
+
+        function renderCakesTable() {
+            const tbody = document.getElementById('cakeBookingsTbody');
+            document.getElementById('statCakesCount').textContent = sampleBookings.length;
+            document.getElementById('tabCakesNum').textContent = sampleBookings.length;
+
+            if (sampleBookings.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="10" style="text-align:center; padding:3.5rem 1.5rem; color:#8D7A6E;">
+                            <div style="font-size:2.5rem; margin-bottom:0.75rem;">🎂</div>
+                            <h3 style="font-size:1.15rem; font-weight:700; color:var(--color-dark-roast); margin:0 0 0.5rem 0;">No bookings yet.</h3>
+                            <p style="margin:0 0 1.25rem 0; font-size:0.9rem; color:var(--color-dark-muted);">Customize a dream cake with your choice of shape, flavor, fillings, and decorations.</p>
+                            <a href="custom-cake.html" class="btn-pill btn-strawberry" style="text-decoration:none; display:inline-block; font-size:0.88rem; padding:0.6rem 1.35rem;">Build a Custom Cake</a>
+                        </td>
+                    </tr>`;
+                calcTotals();
+                return;
+            }
+
+            tbody.innerHTML = sampleBookings.map(b => `
+                <tr>
+                    <td><strong>${b.bookingId}</strong></td>
+                    <td>${b.customerName}</td>
+                    <td>${b.occasion}</td>
+                    <td><div><strong>${b.cakeSize}</strong></div><small style="color:#786558;">${b.flavor}</small></td>
+                    <td>${b.requiredDate}</td>
+                    <td>${b.pickupOrDelivery}</td>
+                    <td style="font-weight:700; color:var(--color-strawberry);">Rs. ${b.estimatedPrice.toLocaleString()}</td>
+                    <td>${getBadge(b.status)}</td>
+                    <td><span class="badge" style="background:#FFF3E0; color:#E65100; border:1px solid #FFE0B2; font-weight:700;">${b.paymentStatus || 'Pay After Delivery'}</span></td>
+                    <td>
+                        <div class="action-btn-group">
+                            <button type="button" class="btn-action btn-action-view" onclick="viewCakeDetails('${b.bookingId}')">View</button>
+                            <button type="button" class="btn-action btn-action-edit" onclick="editCake('${b.bookingId}')">Edit</button>
+                            <button type="button" class="btn-action btn-action-del" onclick="deleteCake('${b.bookingId}')">Cancel</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            calcTotals();
+        }
+
+        function calcTotals() {
+            let sum = 0;
+            sampleOrders.forEach(o => { if (o.status !== 'Cancelled') sum += o.totalAmount; });
+            sampleBookings.forEach(b => { if (b.status !== 'Cancelled') sum += b.estimatedPrice; });
+            document.getElementById('statTotalRev').textContent = 'Rs. ' + Math.round(sum).toLocaleString();
+        }
+
+        function switchTab(tab) {
+            const tabs = ['bakery', 'cake', 'invoices', 'refunds', 'designs'];
+            tabs.forEach(t => {
+                const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn');
+                const content = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1) + 'Content');
+                if (btn) {
+                    if (t === tab) btn.classList.add('active');
+                    else btn.classList.remove('active');
+                }
+                if (content) {
+                    content.style.display = (t === tab) ? 'block' : 'none';
+                }
+            });
+
+            if (tab === 'invoices') {
+                loadCustomerInvoices();
+            } else if (tab === 'refunds') {
+                loadCustomerRefunds();
+            } else if (tab === 'designs') {
+                loadSavedCakeDesigns();
+            }
+        }
+
+        async function viewOrderDetails(id) {
+            const o = sampleOrders.find(item => item.orderId === id);
+            if (!o) return;
+            document.getElementById('viewModalTitle').textContent = 'Order Receipt: ' + o.orderId;
+
+            let paymentBadge = '';
+            let deliveryBadge = '';
+
+            try {
+                const [payRes, delRes] = await Promise.all([
+                    fetch(`/api/site/payments/order/${id}`).catch(() => null),
+                    fetch(`/api/site/deliveries/order/${id}`).catch(() => null)
+                ]);
+
+                if (payRes && payRes.ok) {
+                    const pay = await payRes.json();
+                    if (pay && pay.paymentId) {
+                        const pSt = pay.paymentStatus || 'PENDING';
+                        paymentBadge = `
+                            <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:0.85rem 1rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <div style="font-weight:700; color:#166534;">💳 Payment Record (${pay.paymentId})</div>
+                                    <div style="font-size:0.82rem; color:#4B5563; margin-top:2px;">Method: <strong>${pay.paymentMethod || 'Credit/Debit Card'}</strong> | Amount: <strong>Rs. ${Number(pay.amount || 0).toLocaleString()}</strong></div>
+                                    <div style="font-size:0.78rem; color:#6B7280; margin-top:2px;">Date: ${pay.paymentDate ? pay.paymentDate.substring(0, 10) : 'Today'}</div>
+                                </div>
+                                <span class="badge ${pSt === 'PAID' ? 'badge-confirmed' : (pSt === 'REFUNDED' ? 'badge-cancelled' : 'badge-pending')}" style="font-size:0.82rem; padding:0.35rem 0.75rem; font-weight:700;">
+                                    ${pSt}
+                                </span>
+                            </div>
+                        `;
+                    }
+                }
+
+                if (delRes && delRes.ok) {
+                    const del = await delRes.json();
+                    if (del && del.deliveryId) {
+                        const dSt = del.deliveryStatus || 'ASSIGNED';
+                        deliveryBadge = `
+                            <div style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:10px; padding:0.85rem 1rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <div style="font-weight:700; color:#1E40AF;">🚚 Delivery Tracking (${del.deliveryId})</div>
+                                    <div style="font-size:0.82rem; color:#4B5563; margin-top:2px;">Address: <strong>${del.deliveryAddress}</strong></div>
+                                    <div style="font-size:0.78rem; color:#6B7280; margin-top:2px;">Estimated Arrival: <strong>${del.deliveryDate || 'Scheduled'}</strong></div>
+                                </div>
+                                <span class="badge ${dSt === 'DELIVERED' ? 'badge-confirmed' : (dSt === 'CANCELLED' ? 'badge-cancelled' : 'badge-pending')}" style="font-size:0.82rem; padding:0.35rem 0.75rem; font-weight:700;">
+                                    ${dSt}
+                                </span>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (err) {}
+
+            document.getElementById('viewModalBody').innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:1rem; border-bottom:1px solid #EADBCE; padding-bottom:0.75rem;">
+                    <div><strong>Customer:</strong> ${o.customerName}</div>
+                    <div><strong>Date:</strong> ${o.orderDate}</div>
+                </div>
+                <div style="margin-bottom:0.75rem;"><strong>Contact:</strong> ${o.customerPhone} | ${o.customerEmail || 'N/A'}</div>
+                <div style="margin-bottom:1rem;"><strong>Fulfillment Address:</strong> ${o.deliveryAddress}</div>
+                ${paymentBadge}
+                ${deliveryBadge}
+                <div style="background:#FFFDF9; border:1px solid #EADBCE; border-radius:12px; padding:1rem; margin-bottom:1rem;">
+                    <div style="font-weight:700; margin-bottom:0.5rem; color:#C88D44;">Purchased Items:</div>
+                    <div style="line-height:1.6;">${o.items}</div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:1.2rem; font-weight:800; color:#C92C3D; border-top:1px dashed #EADBCE; padding-top:0.75rem;">
+                    <span>Total Amount:</span>
+                    <span>Rs. ${Number(o.totalAmount).toLocaleString()}</span>
+                </div>
+                <div style="margin-top:1rem; font-size:0.85rem; color:#6C757D;"><strong>Notes:</strong> ${o.notes || 'None'}</div>
+                <div style="display:flex; gap:0.6rem; margin-top:1.25rem; padding-top:0.85rem; border-top:1px solid #EADBCE; flex-wrap:wrap;">
+                    <button type="button" class="btn-action btn-action-view" style="background:#2563EB; color:#fff;" onclick="openCustomerInvoiceModalByOrderId('${o.orderId}')">
+                        📄 View & Print Invoice
+                    </button>
+                    <button type="button" class="btn-action btn-action-edit" style="background:#F59E0B; color:#fff;" onclick="openRefundModalForOrder('${o.orderId}', ${o.totalAmount})">
+                        🔄 Request Refund
+                    </button>
+                </div>
+            `;
+            document.getElementById('viewDetailsModal').style.display = 'flex';
+        }
+
+        // ==========================================
+        // CUSTOMER INVOICES LOGIC
+        // ==========================================
+        let customerInvoices = [];
+
+        async function loadCustomerInvoices() {
+            try {
+                const res = await fetch('/api/site/invoices');
+                if (res.ok) {
+                    customerInvoices = await res.json();
+                } else {
+                    customerInvoices = [];
+                }
+            } catch (e) {
+                console.error('Error fetching invoices:', e);
+                customerInvoices = [];
+            }
+            renderCustomerInvoicesTable();
+        }
+
+        function renderCustomerInvoicesTable() {
+            const tbody = document.getElementById('customerInvoicesTbody');
+            const numEl = document.getElementById('tabInvoicesNum');
+            if (numEl) numEl.textContent = customerInvoices.length;
+            if (!tbody) return;
+
+            if (customerInvoices.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:3rem; color:#8D7A6E;">No invoices found. Once your orders are paid, official tax invoices will appear here.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = customerInvoices.map(inv => {
+                const formattedDate = inv.invoiceDate ? new Date(inv.invoiceDate).toLocaleString() : '-';
+                const formattedTotal = Number(inv.totalAmount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                const badgeCls = inv.status === 'PAID' ? 'badge-confirmed' : (inv.status === 'VOID' ? 'badge-cancelled' : 'badge-pending');
+
+                return `
+                    <tr>
+                        <td><strong>${inv.invoiceNumber || 'INV-' + inv.id}</strong></td>
+                        <td><span class="badge" style="background:#EEF2F6; color:#1E293B;">${inv.orderId || '-'}</span></td>
+                        <td>${inv.customerName || 'Customer'}</td>
+                        <td>${formattedDate}</td>
+                        <td style="font-weight:700; color:var(--color-strawberry);">Rs. ${formattedTotal}</td>
+                        <td><span class="badge ${badgeCls}">${inv.status || 'PAID'}</span></td>
+                        <td>
+                            <div class="action-btn-group">
+                                <button type="button" class="btn-action btn-action-view" onclick="openCustomerInvoiceDetailById(${inv.id})">
+                                    📄 View & Print
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function openCustomerInvoiceDetailById(id) {
+            const inv = customerInvoices.find(i => i.id === id);
+            if (!inv) return;
+
+            document.getElementById('custInvNumber').textContent = inv.invoiceNumber || ('INV-' + inv.id);
+            document.getElementById('custInvDate').textContent = 'Date: ' + (inv.invoiceDate ? new Date(inv.invoiceDate).toLocaleString() : '-');
+            const badge = document.getElementById('custInvBadge');
+            badge.textContent = inv.status || 'PAID';
+            badge.className = 'badge ' + (inv.status === 'PAID' ? 'badge-confirmed' : (inv.status === 'VOID' ? 'badge-cancelled' : 'badge-pending'));
+
+            document.getElementById('custInvCustomer').textContent = inv.customerName || 'Customer';
+            document.getElementById('custInvEmail').textContent = inv.customerEmail || '-';
+            document.getElementById('custInvPhone').textContent = inv.customerPhone || '-';
+            document.getElementById('custInvAddress').textContent = inv.billingAddress || '-';
+
+            document.getElementById('custInvOrderId').textContent = inv.orderId || '-';
+            document.getElementById('custInvOrderStatus').textContent = inv.orderStatus || 'PAID';
+            document.getElementById('custInvNotes').textContent = inv.notes || 'None';
+
+            const formattedTotal = Number(inv.totalAmount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('custInvTotal').textContent = 'Rs. ' + formattedTotal;
+
+            const itemsBox = document.getElementById('custInvItems');
+            if (inv.itemsSummary) {
+                const lines = inv.itemsSummary.split('\n').filter(l => l.trim().length > 0);
+                itemsBox.innerHTML = lines.map(line => `
+                    <div style="padding:0.6rem 1rem; border-bottom:1px solid var(--color-border); font-size:0.88rem; background:#fff;">
+                        ${line}
+                    </div>
+                `).join('');
+            } else {
+                itemsBox.innerHTML = `<div style="padding:0.75rem 1rem; font-size:0.88rem; color:#666;">Standard Order Items (Total: Rs. ${formattedTotal})</div>`;
+            }
+
+            document.getElementById('customerInvoiceModal').style.display = 'flex';
+        }
+
+        async function openCustomerInvoiceModalByOrderId(orderId) {
+            try {
+                let res = await fetch(`/api/site/invoices/order/${orderId}`);
+                let inv = null;
+                if (res.ok) {
+                    inv = await res.json();
+                } else if (res.status === 404) {
+                    // Try generating for this paid order
+                    const genRes = await fetch(`/api/site/invoices/generate/${orderId}`, { method: 'POST' });
+                    if (genRes.ok) {
+                        inv = await genRes.json();
+                    }
+                }
+
+                if (inv) {
+                    customerInvoices = [inv, ...customerInvoices.filter(i => i.id !== inv.id)];
+                    openCustomerInvoiceDetailById(inv.id);
+                } else {
+                    alert('No invoice found for Order ' + orderId + '. Invoices are available for confirmed/paid orders.');
+                }
+            } catch (e) {
+                alert('Could not retrieve invoice for Order ' + orderId);
+            }
+        }
+
+        function printCustomerInvoice() {
+            const printContent = document.getElementById('customerPrintableArea').innerHTML;
+            const printWindow = window.open('', '_blank', 'width=800,height=700');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Invoice - Sweet Bloom Patisserie</title>
+                    <style>
+                        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 2rem; color: #2C1E16; }
+                        .badge { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 9999px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; }
+                        .badge-confirmed { background: #E6F4EA; color: #137333; border: 1px solid #CEEAD6; }
+                        .badge-cancelled { background: #F1F3F4; color: #5F6368; border: 1px solid #DADCE0; }
+                        .badge-pending { background: #FFF4E5; color: #B25E09; border: 1px solid #FFE2B8; }
+                        @media print {
+                            body { padding: 0; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${printContent}
+                    <script>
+                        window.onload = function() {
+                            window.print();
+                        };
+                    <\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+
+        // ==========================================
+        // CUSTOMER REFUND REQUESTS LOGIC
+        // ==========================================
+        let customerRefunds = [];
+
+        async function loadCustomerRefunds() {
+            try {
+                const res = await fetch('/api/site/refund-requests');
+                if (res.ok) {
+                    customerRefunds = await res.json();
+                } else {
+                    customerRefunds = [];
+                }
+            } catch (e) {
+                console.error('Error fetching refund requests:', e);
+                customerRefunds = [];
+            }
+            renderCustomerRefundsTable();
+        }
+
+        function renderCustomerRefundsTable() {
+            const tbody = document.getElementById('customerRefundsTbody');
+            const numEl = document.getElementById('tabRefundsNum');
+            if (numEl) numEl.textContent = customerRefunds.length;
+            if (!tbody) return;
+
+            if (customerRefunds.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:3rem; color:#8D7A6E;">No refund requests submitted. If you have an issue with an order, click "Submit Refund Request" above.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = customerRefunds.map(req => {
+                const formattedDate = req.requestDate ? new Date(req.requestDate).toLocaleString() : '-';
+                const formattedAmount = Number(req.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                const badgeCls = req.status === 'APPROVED' ? 'badge-confirmed' : (req.status === 'REJECTED' ? 'badge-preparing' : (req.status === 'WITHDRAWN' ? 'badge-cancelled' : 'badge-pending'));
+
+                return `
+                    <tr>
+                        <td><strong>${req.requestId || 'REF-' + req.id}</strong></td>
+                        <td><span class="badge" style="background:#EEF2F6; color:#1E293B;">${req.orderId || '-'}</span></td>
+                        <td style="font-weight:700; color:var(--color-strawberry);">Rs. ${formattedAmount}</td>
+                        <td style="max-width:200px; font-size:0.85rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${req.reason || ''}">${req.reason || '-'}</td>
+                        <td>${formattedDate}</td>
+                        <td><span class="badge ${badgeCls}">${req.status || 'PENDING'}</span></td>
+                        <td style="font-size:0.85rem; color:#666;">${req.adminNotes || '-'}</td>
+                        <td>
+                            <div class="action-btn-group">
+                                ${req.status === 'PENDING' ? `
+                                    <button type="button" class="btn-action btn-action-edit" onclick="openEditRefundReasonModal(${req.id})" title="Edit Reason">
+                                        ✏️ Edit
+                                    </button>
+                                    <button type="button" class="btn-action btn-action-del" onclick="withdrawCustomerRefund(${req.id})" title="Withdraw Request">
+                                        ✖️ Cancel
+                                    </button>
+                                ` : `
+                                    <span style="font-size:0.8rem; color:#888;">Complete</span>
+                                `}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function openNewRefundModal() {
+            document.getElementById('custRefundEditId').value = '';
+            document.getElementById('custRefundModalTitle').textContent = 'Submit Refund Request';
+            document.getElementById('custRefundSubmitBtn').textContent = 'Submit Request';
+            const orderInput = document.getElementById('custRefundOrderId');
+            const amtInput = document.getElementById('custRefundAmount');
+            orderInput.value = '';
+            orderInput.disabled = false;
+            amtInput.value = '';
+            amtInput.disabled = false;
+            document.getElementById('custRefundReason').value = '';
+            document.getElementById('customerRefundModal').style.display = 'flex';
+        }
+
+        function openRefundModalForOrder(orderId, amount) {
+            closeModal('viewDetailsModal');
+            document.getElementById('custRefundEditId').value = '';
+            document.getElementById('custRefundModalTitle').textContent = 'Request Refund for ' + orderId;
+            document.getElementById('custRefundSubmitBtn').textContent = 'Submit Request';
+            const orderInput = document.getElementById('custRefundOrderId');
+            const amtInput = document.getElementById('custRefundAmount');
+            orderInput.value = orderId;
+            orderInput.disabled = true;
+            amtInput.value = amount || '';
+            amtInput.disabled = false;
+            document.getElementById('custRefundReason').value = '';
+            document.getElementById('customerRefundModal').style.display = 'flex';
+        }
+
+        function openEditRefundReasonModal(id) {
+            const req = customerRefunds.find(r => r.id === id);
+            if (!req) return;
+
+            document.getElementById('custRefundEditId').value = req.id;
+            document.getElementById('custRefundModalTitle').textContent = 'Edit Refund Reason (' + (req.requestId || 'REF-' + req.id) + ')';
+            document.getElementById('custRefundSubmitBtn').textContent = 'Save Updated Reason';
+
+            const orderInput = document.getElementById('custRefundOrderId');
+            const amtInput = document.getElementById('custRefundAmount');
+            orderInput.value = req.orderId || '';
+            orderInput.disabled = true;
+            amtInput.value = req.amount || '';
+            amtInput.disabled = true;
+
+            document.getElementById('custRefundReason').value = req.reason || '';
+            document.getElementById('customerRefundModal').style.display = 'flex';
+        }
+
+        async function handleCustomerRefundSubmit(e) {
+            e.preventDefault();
+            const editId = document.getElementById('custRefundEditId').value;
+            const reason = document.getElementById('custRefundReason').value.trim();
+
+            if (!reason) {
+                alert('Please provide a reason for the refund request.');
+                return;
+            }
+
+            try {
+                if (editId) {
+                    // Updating reason on existing pending request
+                    const res = await fetch(`/api/site/refund-requests/${editId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ reason })
+                    });
+                    if (!res.ok) {
+                        const err = await res.json().catch(() => ({ message: 'Failed to update reason' }));
+                        throw new Error(err.message || 'Failed to update reason');
+                    }
+                    closeModal('customerRefundModal');
+                    await loadCustomerRefunds();
+                    showNotice('Refund request reason successfully updated!');
+                } else {
+                    // Creating new request
+                    const orderId = document.getElementById('custRefundOrderId').value.trim();
+                    const amount = parseFloat(document.getElementById('custRefundAmount').value);
+
+                    const res = await fetch('/api/site/refund-requests', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ orderId, amount, reason })
+                    });
+
+                    if (!res.ok) {
+                        const err = await res.json().catch(() => ({ message: 'Failed to submit refund request' }));
+                        throw new Error(err.message || 'Failed to submit refund request');
+                    }
+
+                    closeModal('customerRefundModal');
+                    await loadCustomerRefunds();
+                    switchTab('refunds');
+                    showNotice('Refund request submitted successfully! An administrator will review your claim.');
+                }
+            } catch (err) {
+                alert(err.message || 'Error submitting refund request');
+            }
+        }
+
+        async function withdrawCustomerRefund(id) {
+            if (!confirm('Are you sure you want to withdraw this refund request?')) {
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/site/refund-requests/${id}/withdraw`, { method: 'PUT' });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({ message: 'Failed to withdraw refund request' }));
+                    throw new Error(err.message || 'Failed to withdraw refund request');
+                }
+                await loadCustomerRefunds();
+                showNotice('Refund request withdrawn.');
+            } catch (err) {
+                alert(err.message || 'Error withdrawing refund request');
+            }
+        }
+
+        function viewCakeDetails(id) {
+            const b = sampleBookings.find(item => item.bookingId === id);
+            if (!b) return;
+            document.getElementById('viewModalTitle').textContent = 'Cake Booking: ' + b.bookingId;
+            document.getElementById('viewModalBody').innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:1rem; border-bottom:1px solid #EADBCE; padding-bottom:0.75rem;">
+                    <div><strong>Customer:</strong> ${b.customerName}</div>
+                    <div><strong>Required Date:</strong> ${b.requiredDate}</div>
+                </div>
+                <div style="margin-bottom:0.75rem;"><strong>Occasion:</strong> ${b.occasion} | <strong>Fulfillment:</strong> ${b.pickupOrDelivery}</div>
+                <div style="margin-bottom:0.75rem;"><strong>Size & Servings:</strong> ${b.cakeSize} (${b.servings})</div>
+                <div style="margin-bottom:0.75rem;"><strong>Flavor:</strong> ${b.flavor}</div>
+                <div style="margin-bottom:0.75rem;"><strong>Theme & Colors:</strong> ${b.theme} (${b.preferredColors})</div>
+                <div style="background:#FFF0F3; border:1px solid #F9D8DE; border-radius:12px; padding:1rem; margin-bottom:1rem;">
+                    <div style="font-weight:700; color:#C92C3D; margin-bottom:0.25rem;">Piped Inscription:</div>
+                    <div style="font-family:var(--font-heading); font-style:italic; font-size:1.1rem;">"${b.cakeMessage || 'No piped message'}"</div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:1.2rem; font-weight:800; color:#C92C3D; border-top:1px dashed #EADBCE; padding-top:0.75rem;">
+                    <span>Estimated Total:</span>
+                    <span>Rs. ${(parseFloat(b.estimatedPrice) || 0).toLocaleString()}</span>
+                </div>
+                <div style="margin-top:1rem; font-size:0.85rem; color:#6C757D;"><strong>Special Instructions:</strong> ${b.notes || 'None'}</div>
+            `;
+            document.getElementById('viewDetailsModal').style.display = 'flex';
+        }
+
+        function editOrder(id) {
+            const o = sampleOrders.find(item => item.orderId === id);
+            if (!o) return;
+            document.getElementById('editOrderId').value = o.orderId;
+            document.getElementById('editOrderCustomerName').value = o.customerName;
+            document.getElementById('editOrderPhone').value = o.customerPhone;
+            document.getElementById('editOrderAddress').value = o.deliveryAddress;
+            document.getElementById('editOrderStatus').value = o.status;
+            document.getElementById('editOrderNotes').value = o.notes;
+            document.getElementById('editOrderModal').style.display = 'flex';
+        }
+
+        async function handleEditOrderSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('editOrderId').value;
+            const payload = {
+                customerName: document.getElementById('editOrderCustomerName').value,
+                customerPhone: document.getElementById('editOrderPhone').value,
+                deliveryAddress: document.getElementById('editOrderAddress').value,
+                notes: document.getElementById('editOrderNotes').value
+            };
+            try {
+                const response = await fetch('/api/site/orders/' + encodeURIComponent(id), {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+                if (!response.ok) throw new Error((await response.json()).message || 'The order could not be updated.');
+                window.location.reload();
+            } catch (error) { alert(error.message); }
+        }
+
+        async function deleteOrder(id) {
+            if (confirm(`Are you sure you want to cancel / delete Order ${id}?`)) {
+                try {
+                    await fetch('/website/order', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `action=cancel&orderId=${encodeURIComponent(id)}`
+                    });
+                } catch(e) {}
+                sampleOrders = sampleOrders.filter(item => item.orderId !== id);
+                renderOrdersTable();
+                showNotice(`Order ${id} has been cancelled and removed.`);
+            }
+        }
+
+        function editCake(id) {
+            const b = sampleBookings.find(item => item.bookingId === id);
+            if (!b) return;
+            document.getElementById('editCakeBookingId').value = b.bookingId;
+            document.getElementById('editCakeCustomerName').value = b.customerName;
+            document.getElementById('editCakePhone').value = b.contactNumber;
+            document.getElementById('editCakeDate').value = b.requiredDate;
+            document.getElementById('editCakeStatus').value = b.status;
+            document.getElementById('editCakePrice').value = b.estimatedPrice;
+            document.getElementById('editCakeNotes').value = b.notes;
+            document.getElementById('editCakeModal').style.display = 'flex';
+        }
+
+        async function handleEditCakeSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('editCakeBookingId').value;
+            const payload = {
+                customerName:document.getElementById('editCakeCustomerName').value,
+                contactNumber:document.getElementById('editCakePhone').value,
+                requiredDate:document.getElementById('editCakeDate').value,
+                notes:document.getElementById('editCakeNotes').value
+            };
+            try {
+                const response=await fetch('/api/site/bookings/'+encodeURIComponent(id),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+                if(!response.ok)throw new Error((await response.json()).message || 'The booking could not be updated.');
+                window.location.reload();
+            } catch(error){alert(error.message);}
+        }
+
+        async function deleteCake(id) {
+            if(!confirm('Cancel this cake booking?'))return;
+            try {
+                const response=await fetch('/api/site/bookings/'+encodeURIComponent(id),{method:'DELETE'});
+                if(!response.ok)throw new Error((await response.json()).message || 'The booking could not be cancelled.');
+                window.location.reload();
+            } catch(error){alert(error.message);}
+        }
+
+        function showNotice(text) {
+            const banner = document.getElementById('flashMsgContainer');
+            banner.innerHTML = `
+                <div style="background:#E6F4EA; border:1px solid #CEEAD6; color:#137333; padding:1rem 1.5rem; border-radius:var(--radius-md); margin-bottom:2rem; font-weight:600;">
+                    ✓ ${text}
+                </div>
+            `;
+            setTimeout(() => { banner.innerHTML = ''; }, 4000);
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function closeModalOnOuter(event, id) {
+            if (event.target.id === id) {
+                closeModal(id);
+            }
+        }
+
+        let sampleDesigns = [];
+
+        async function loadSavedCakeDesigns() {
+            try {
+                const res = await fetch('/api/site/cake-designs');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data)) {
+                        sampleDesigns = data;
+                        renderSavedCakeDesignsTable(sampleDesigns);
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.warn('Could not load cake designs from /api/site/cake-designs', err);
+            }
+            renderSavedCakeDesignsTable(sampleDesigns);
+        }
+
+        function renderSavedCakeDesignsTable(designs) {
+            const tbody = document.getElementById('savedDesignsTbody');
+            const numEl = document.getElementById('tabDesignsNum');
+            if (numEl) numEl.textContent = designs.length;
+            if (!tbody) return;
+
+            if (designs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:2.5rem; color:#888;">No saved custom cake designs yet. <a href="custom-cake.html" style="color:var(--color-strawberry); font-weight:700;">Create your first design now!</a></td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = designs.map(d => {
+                const imgPath = d.referenceImageUrl || d.referenceImagePath;
+                const imgHtml = imgPath 
+                    ? `<img src="${imgPath}" alt="Design Preview" style="width:48px; height:48px; border-radius:6px; object-fit:cover; border:1px solid #EADBCE;" onerror="this.onerror=null; this.src='/images/hero/1.png';">`
+                    : `<span style="font-size:0.75rem; color:#888; font-style:italic;">No image</span>`;
+                const shape = d.shape || 'Round';
+                const flavor = d.flavor || 'Vanilla';
+                const decoration = d.decoration || 'Strawberry';
+                const filling = d.filling || 'Vanilla Cream';
+                const msg = d.message || d.cakeMessage || '-';
+                const price = (d.estimatedPrice !== undefined && d.estimatedPrice !== null) ? Number(d.estimatedPrice) : 0;
+                const dCode = d.designCode || ('DES-' + d.id);
+
+                return `
+                    <tr>
+                        <td style="font-weight:700; color:var(--color-dark-roast);">${dCode}</td>
+                        <td>${imgHtml}</td>
+                        <td><strong>${shape}</strong><br><small style="color:var(--color-dark-muted);">${flavor}</small></td>
+                        <td>${decoration}<br><small style="color:var(--color-dark-muted);">${filling}</small></td>
+                        <td style="font-style:italic; max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">"${msg}"</td>
+                        <td style="font-weight:700; color:var(--color-strawberry);">Rs. ${price.toLocaleString()}</td>
+                        <td>
+                            <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+                                <a href="custom-cake.html?designId=${d.id}" class="btn-pill btn-outline" style="font-size:0.75rem; padding:0.3rem 0.6rem; text-decoration:none;">🎂 Book</a>
+                                <button type="button" class="btn-pill btn-outline" onclick="openEditDesignModal('${d.id}')" style="font-size:0.75rem; padding:0.3rem 0.6rem;">✏️ Edit</button>
+                                <button type="button" class="btn-pill btn-strawberry" onclick="deleteSavedDesign('${d.id}')" style="font-size:0.75rem; padding:0.3rem 0.6rem;">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function openEditDesignModal(id) {
+            const d = sampleDesigns.find(item => String(item.id) === String(id) || String(item.designCode) === String(id));
+            if (!d) return;
+
+            document.getElementById('editDesignId').value = d.id;
+            if (document.getElementById('editDesignShape')) document.getElementById('editDesignShape').value = d.shape || 'Round';
+            if (document.getElementById('editDesignFlavor')) document.getElementById('editDesignFlavor').value = d.flavor || 'Vanilla';
+            if (document.getElementById('editDesignDecoration')) document.getElementById('editDesignDecoration').value = d.decoration || 'Strawberry';
+            if (document.getElementById('editDesignFilling')) document.getElementById('editDesignFilling').value = d.filling || 'Vanilla Cream';
+            if (document.getElementById('editDesignMessage')) document.getElementById('editDesignMessage').value = d.message || d.cakeMessage || '';
+            if (document.getElementById('editDesignPrice')) document.getElementById('editDesignPrice').value = d.estimatedPrice || 0;
+
+            document.getElementById('editDesignModal').style.display = 'flex';
+        }
+
+        async function handleEditDesignSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('editDesignId').value;
+            const shape = document.getElementById('editDesignShape').value;
+            const flavor = document.getElementById('editDesignFlavor').value;
+            const decoration = document.getElementById('editDesignDecoration').value;
+            const filling = document.getElementById('editDesignFilling').value;
+            const msg = document.getElementById('editDesignMessage').value;
+            const price = parseFloat(document.getElementById('editDesignPrice').value) || 0;
+
+            try {
+                const resp = await fetch('/api/site/cake-designs/' + id, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        shape: shape,
+                        flavor: flavor,
+                        decoration: decoration,
+                        filling: filling,
+                        cakeMessage: msg,
+                        message: msg,
+                        estimatedPrice: price
+                    })
+                });
+                const res = await resp.json();
+                if (res.success) {
+                    closeModal('editDesignModal');
+                    showNotice('Cake design updated successfully!');
+                    loadSavedCakeDesigns();
+                } else {
+                    alert('Error updating design: ' + (res.message || 'Unknown error'));
+                }
+            } catch (err) {
+                console.error('Error updating design:', err);
+                alert('Could not update design right now.');
+            }
+        }
+
+        async function deleteSavedDesign(id) {
+            if (!confirm('Are you sure you want to delete this saved cake design?')) return;
+            try {
+                const resp = await fetch('/api/site/cake-designs/' + id, {
+                    method: 'DELETE'
+                });
+                const res = await resp.json();
+                if (res.success) {
+                    showNotice('Cake design deleted successfully.');
+                    loadSavedCakeDesigns();
+                } else {
+                    alert('Error deleting design: ' + (res.message || 'Unknown error'));
+                }
+            } catch (err) {
+                console.error('Error deleting design:', err);
+                alert('Could not delete design right now.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const msg = urlParams.get('msg');
+            if (msg) showNotice(decodeURIComponent(msg));
+
+            const tabParam = urlParams.get('tab');
+            if (tabParam === 'bookings' || tabParam === 'cake') {
+                switchTab('cake');
+            } else if (tabParam === 'invoices') {
+                switchTab('invoices');
+            } else if (tabParam === 'refunds') {
+                switchTab('refunds');
+            } else if (tabParam === 'designs') {
+                switchTab('designs');
+            } else {
+                switchTab('bakery');
+            }
+
+            // Open the same record when a saved invoice or refund URL is used.
+            const invoiceId = urlParams.get('invoiceId');
+            loadCustomerInvoices().then(() => {
+                if (tabParam === 'invoices' && invoiceId && /^\d+$/.test(invoiceId)) {
+                    openCustomerInvoiceDetailById(Number(invoiceId));
+                }
+            });
+            const refundOrderId = urlParams.get('orderId');
+            if (tabParam === 'refunds' && refundOrderId && /^\d+$/.test(refundOrderId)) {
+                openNewRefundModal();
+                document.getElementById('custRefundOrderId').value = refundOrderId;
+            }
+            loadCustomerRefunds();
+            loadSavedCakeDesigns();
+
+            // Fetch customer orders and custom cake bookings
+            fetchRealData();
+        });
+    </script>
+    <!-- Main JS -->
+    
+</body>
+</html>

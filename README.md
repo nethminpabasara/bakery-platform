@@ -2,6 +2,7 @@
 
 Bakery Order and Custom Cake Booking Platform for SE1020 Object Oriented Programming.
 
+<<<<<<< HEAD
 ## Run the project
 
 1. Clone the repository. Open the root `pom.xml` in IntelliJ as a Maven project and select JDK 21. The project uses Spring Boot 4.1.2.
@@ -28,3 +29,16 @@ Each member branch contains the shared project setup and that member's assigned 
 ## Java packages
 
 The full application and its tests use `com.bakery.bakeryplatform`. The source is grouped under `config`, `controller`, `dto`, `exception`, `model`, `repository`, and `service`.
+=======
+
+
+## Team modules
+
+| Member | CRUDs | Branch | MemeberName| MemberID |
+| --- | --- | --- | --- | --- |
+| 1 | CartItem, Order, Payment | `member-01-cart-order-payment` | Pabasara | IT26100616 |
+| 2 | User, Delivery | `member-02-user-delivery` | Sandil | IT26100302 |
+| 3 | Product, Category | `member-03-product-category` | Abeetha | IT26100367 |
+| 4 | Invoice, RefundRequest | `member-04-invoice-refund` | Suraj | IT26100735 |
+| 5 | CustomCakeBooking, CakeOption, CakeDesign | `member-05-custom-cake` | Oshan | IT26100705 |
+>>>>>>> 638e6314080a6d8b57c13d5bdd4c0169343485c1

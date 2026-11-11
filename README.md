@@ -6,8 +6,8 @@ Bakery Order and Custom Cake Booking Platform for SE1020 Object Oriented Program
 
 ## Team modules
 
-| Member | CRUDs | Branch | MemeberName|
-| --- | --- | --- | --- |
+| Member | CRUDs | Branch | MemeberName| MemberID |
+| --- | --- | --- | --- | --- |
 | 1 | CartItem, Order, Payment | `member-01-cart-order-payment` | Pabasara | IT26100616 |
 | 2 | User, Delivery | `member-02-user-delivery` | Sandil | IT26100302 |
 | 3 | Product, Category | `member-03-product-category` | Abeetha | IT26100367 |

@@ -15,10 +15,6 @@ Bakery Order and Custom Cake Booking Platform for SE1020 Object Oriented Program
 
 Each member branch contains the shared project setup and that member's assigned files. Combine the five module branches to build and run the complete application. 
 
-## Java packages
-
-The full application and its tests use `com.bakery.bakeryplatform`. The source is grouped under `config`, `controller`, `dto`, `exception`, `model`, `repository`, and `service`.
-=======
 
 
 ## Team modules
@@ -30,4 +26,4 @@ The full application and its tests use `com.bakery.bakeryplatform`. The source i
 | 3 | Product, Category | `member-03-product-category` | Abeetha | IT26100367 |
 | 4 | Invoice, RefundRequest | `member-04-invoice-refund` | Suraj | IT26100735 |
 | 5 | CustomCakeBooking, CakeOption, CakeDesign | `member-05-custom-cake` | Oshan | IT26100705 |
->>>>>>> 638e6314080a6d8b57c13d5bdd4c0169343485c1
+

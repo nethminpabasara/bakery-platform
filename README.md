@@ -2,17 +2,6 @@
 
 Bakery Order and Custom Cake Booking Platform for SE1020 Object Oriented Programming.
 
-<<<<<<< HEAD
-## Run the project
-
-1. Clone the repository. Open the root `pom.xml` in IntelliJ as a Maven project and select JDK 21. The project uses Spring Boot 4.1.2.
-2. In the `BakeryShopApplication` run configuration, set `APP_ADMIN_USERNAME`, `APP_ADMIN_EMAIL`, and `APP_ADMIN_PASSWORD` to your own administrator values.
-3. Run `com.bakery.bakeryplatform.BakeryShopApplication` and open [http://localhost:8080](http://localhost:8080). Customers can register on the sign-in page.
-4. Run tests with `mvnw.cmd test` on Windows or `bash mvnw test` on Linux or macOS.
-
-On first run the app creates the local H2 database and seeds the catalogue. Product details are stored in `data/website-items.txt`. H2 stores product categories, stock and the other CRUD records. The `data/` folder is ignored by Git. Place any original product photos under `src/main/resources/static/images/` with their original paths. The site has a placeholder for missing photos.
-
-Checkout records a demonstration payment and opens the thank-you page. The customer can download a PDF invoice after payment. To enable invoice email, set `INVOICE_EMAIL_ENABLED=true` and provide `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, and `MAIL_FROM` in the local run configuration.
 
 ## Team modules
 
